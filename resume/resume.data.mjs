@@ -12,7 +12,7 @@ export const resume = {
     { label: '+92 321 6886133', href: 'tel:+923216886133', underline: false },
     { label: 'iam.fayyazali@gmail.com', href: 'mailto:iam.fayyazali@gmail.com', underline: false },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/fayyaz-ali-dev/', underline: true },
-    { label: 'Portfolio', href: 'https://laravel-backend-portfolio-fayyaz-ali.vercel.app/', underline: true },
+    { label: 'Portfolio', href: 'https://fayyaz-ali-portfolio.vercel.app/', underline: true },
   ],
 
   summary:
@@ -101,7 +101,10 @@ export const resume = {
       bullets: [
         'Interactive iOS-themed portfolio (React 19, Vite, Tailwind CSS 4) built with <b>Claude Code</b> as an AI pair programmer: component architecture, reusable hooks, Liquid Glass UI, and a Siri assistant with a pluggable AI-API adapter and voice input.',
       ],
-      links: [{ label: 'GitHub', href: 'https://github.com/fayyaz48097/iphone-style-portfolio' }],
+      links: [
+        { label: 'fayyaz-ali-portfolio.vercel.app', href: 'https://fayyaz-ali-portfolio.vercel.app/' },
+        { label: 'GitHub', href: 'https://github.com/fayyaz48097/iphone-style-portfolio' },
+      ],
     },
     {
       name: 'Admin Portal — Max Auto Care',
