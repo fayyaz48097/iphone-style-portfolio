@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, loadEnv } from 'vite'
 import { localApi } from './scripts/vite-local-api.mjs'
+import { seoPlugin } from './scripts/vite-seo.mjs'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -10,7 +11,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    plugins: [react(), tailwindcss(), localApi({ env })],
+    plugins: [react(), tailwindcss(), seoPlugin({ env }), localApi({ env })],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),

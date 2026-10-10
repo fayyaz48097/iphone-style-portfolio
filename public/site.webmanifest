@@ -1,7 +1,9 @@
 {
-  "name": "Fayyaz Ali, backend developer",
+  "name": "Fayyaz Ali — Laravel & PHP Backend Developer",
   "short_name": "Fayyaz",
-  "description": "Laravel and PHP backends, from database schema to API.",
+  "description": "Portfolio of Fayyaz Ali: secure, scalable Laravel and PHP backends, from database schema to API.",
+  "lang": "en",
+  "categories": ["portfolio", "developer"],
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

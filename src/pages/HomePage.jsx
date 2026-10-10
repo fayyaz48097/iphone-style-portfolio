@@ -10,6 +10,7 @@ import { WorkSection } from '@/sections/work/WorkSection'
 
 export function HomePage() {
   return (
+    // the home page's title and meta tags are written into index.html at build time (scripts/vite-seo.mjs)
     <DeviceLayout hero={<HeroSection />}>
       <AboutSection />
       <SkillsSection />

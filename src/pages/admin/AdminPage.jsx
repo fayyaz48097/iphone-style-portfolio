@@ -1,23 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Wallpaper } from '@/components/layout/Wallpaper'
+import { Seo } from '@/components/seo/Seo'
 import { SiriLoader } from '@/components/system/Siri/SiriLoader'
 import { glass } from '@/components/ui/glass'
 import { cn } from '@/lib/cn'
 import { isFirebaseConfigured, signInWithGoogle, signOutUser } from '@/services/firebase'
 import { AdminInbox } from './AdminInbox'
 import { useAdminAuth } from './useAdminAuth'
+import { ADMIN_TITLE } from './useUnreadAlerts'
 import './AdminPage.css'
-
-/** Keep the admin screen out of search engines. */
-function useNoIndex() {
-  useEffect(() => {
-    const meta = document.createElement('meta')
-    meta.name = 'robots'
-    meta.content = 'noindex, nofollow'
-    document.head.append(meta)
-    return () => meta.remove()
-  }, [])
-}
 
 function Card({ children }) {
   return <div className={cn(glass(), 'admin-card')}>{children}</div>
@@ -69,7 +60,6 @@ function NotAuthorized({ user }) {
 
 /** /admin: the reply screen for portfolio chats. Only listed admins get past the gate. */
 export default function AdminPage() {
-  useNoIndex()
   const auth = useAdminAuth()
 
   let content
@@ -81,6 +71,8 @@ export default function AdminPage() {
 
   return (
     <div className="admin-page">
+      {/* never in search results (also sent as an X-Robots-Tag header by vercel.json) */}
+      <Seo title={ADMIN_TITLE} noIndex />
       <Wallpaper />
       {content}
     </div>

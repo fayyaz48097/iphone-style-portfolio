@@ -30,9 +30,14 @@ export function HeroSection() {
         <div className="lock-screen__date">{date}</div>
 
         <div className="lock-screen__depth">
-          <h1 className="lock-screen__clock" aria-label={profile.name}>
-            <ClockName text={profile.firstName} />
+          {/* the real heading for search engines and screen readers */}
+          <h1 className="sr-only">
+            {profile.name}, Laravel &amp; PHP {profile.role}
           </h1>
+          {/* the big animated name is decoration */}
+          <div className="lock-screen__clock" aria-hidden="true">
+            <ClockName text={profile.firstName} />
+          </div>
           <img
             className="lock-screen__portrait"
             src={profile.portrait}

@@ -116,6 +116,20 @@ npm run emulators   # auth + database emulators with database.rules.json
 
 Then build or run the app with `VITE_FIREBASE_EMULATORS=true`, and give the API these server variables: `FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099`, `FIREBASE_DATABASE_EMULATOR_HOST=127.0.0.1:9000` and `FIREBASE_PROJECT_ID=demo-portfolio`.
 
+## SEO
+
+Link-preview robots (LinkedIn, WhatsApp, X, Facebook) don't run JavaScript, so the important tags are written into `index.html` at build time by `scripts/vite-seo.mjs`, using `seo.config.mjs` and `resume/resume.data.mjs`:
+
+- title, description, keywords, canonical URL, robots and theme colours
+- Open Graph and Twitter card tags, with a 1200×630 preview image (`public/og-image.png`, rebuilt with `npm run og`)
+- JSON-LD structured data: `Person`, `WebSite` and `ProfilePage`
+- a `<noscript>` text version of the profile
+- `robots.txt` and `sitemap.xml`, generated into the build
+
+At runtime, `<Seo>` (react-helmet-async) handles per-page titles and `noindex` for private pages such as `/admin`.
+
+Set `VITE_SITE_URL` to the live domain. It's needed for absolute URLs and the sitemap. On Vercel it falls back to the production domain automatically.
+
 ## Icons
 
 `npm run icons` crops the face from `public/fayyaz_avatar.jpg` (local source artwork, git-ignored) into the favicon, the Apple touch icon and the web-app manifest icons in `public/icons/`.

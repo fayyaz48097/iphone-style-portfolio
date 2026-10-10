@@ -1,18 +1,16 @@
 import { useEffect, useRef } from 'react'
 
-const BASE_TITLE = 'Messages · Admin'
+export const ADMIN_TITLE = 'Messages · Admin'
 
 /**
- * Background alerts for the admin tab: "(3) Messages" in the tab title, and a
- * system notification when a new visitor message arrives while the tab is hidden.
+ * Background alerts for the admin tab: a system notification when a new visitor
+ * message arrives while the tab is hidden.
+ *
+ * @returns {{ total: number, title: string }} unread count and the tab title, e.g. "(3) Messages · Admin"
  */
 export function useUnreadAlerts(chats) {
   const previous = useRef(null)
   const total = chats.reduce((sum, chat) => sum + (chat.meta.unreadForAdmin ?? 0), 0)
-
-  useEffect(() => {
-    document.title = total ? `(${total}) ${BASE_TITLE}` : BASE_TITLE
-  }, [total])
 
   useEffect(() => {
     const before = previous.current
@@ -28,5 +26,5 @@ export function useUnreadAlerts(chats) {
     })
   }, [total, chats])
 
-  useEffect(() => () => (document.title = BASE_TITLE), [])
+  return { total, title: total ? `(${total}) ${ADMIN_TITLE}` : ADMIN_TITLE }
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Seo } from '@/components/seo/Seo'
 import { SiriLoader } from '@/components/system/Siri/SiriLoader'
 import { cn } from '@/lib/cn'
 import { subscribeChatList, subscribeVisitorsPresence } from '@/services/chat/chatService'
@@ -28,7 +29,7 @@ export function AdminInbox({ user }) {
 
   const chats = loadedChats ?? []
   const { status, setStatus, state } = useAdminPresence(true)
-  useUnreadAlerts(chats)
+  const { title } = useUnreadAlerts(chats)
 
   useEffect(() => subscribeChatList(setLoadedChats, setError), [])
   useEffect(() => subscribeVisitorsPresence(setPresence), [])
@@ -42,6 +43,7 @@ export function AdminInbox({ user }) {
 
   return (
     <div className={cn('admin-window', selected && 'admin-window--thread-open')}>
+      <Seo title={title} noIndex />
       <header className="admin-window__bar">
         <span className="admin-window__lights" aria-hidden="true">
           <i />

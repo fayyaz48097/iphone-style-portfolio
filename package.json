@@ -10,14 +10,16 @@
     "preview": "vite preview",
     "resume": "node scripts/build-resume.mjs",
     "icons": "node scripts/build-icons.mjs",
-    "emulators": "firebase emulators:start --only auth,database --project demo-portfolio"
+    "emulators": "firebase emulators:start --only auth,database --project demo-portfolio",
+    "og": "node scripts/build-og-image.mjs"
   },
   "dependencies": {
     "firebase": "^13.0.0",
     "jose": "^6.2.12",
     "nodemailer": "^10.1.0",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "react-helmet-async": "^3.0.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
