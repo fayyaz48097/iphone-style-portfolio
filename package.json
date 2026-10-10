@@ -8,9 +8,11 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "resume": "node scripts/build-resume.mjs"
+    "resume": "node scripts/build-resume.mjs",
+    "icons": "node scripts/build-icons.mjs"
   },
   "dependencies": {
+    "firebase": "^13.0.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
@@ -23,5 +25,8 @@
     "playwright-core": "^1.64.0",
     "tailwindcss": "^4.3.3",
     "vite": "^8.3.4"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "^1.13.6"
   }
 }

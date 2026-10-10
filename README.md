@@ -23,6 +23,7 @@ Copy `.env.example` to `.env` and fill it in. Every variable is read in one plac
 | `VITE_CONTACT_EMAIL` | mailto links, copy email, terminal, chat hand-off |
 | `VITE_CONTACT_PHONE` | the Call button and the terminal's `contact` command |
 | `VITE_SIRI_API_URL` | your AI endpoint for Siri (empty = answers from local portfolio data) |
+| `VITE_FIREBASE_*` | Firebase web config: Realtime Database and Analytics (see Firebase below) |
 | `VITE_APP_NAME`, `VITE_APP_URL`, `VITE_PORT` | app metadata and the dev server port |
 
 `VITE_` variables are bundled into the client, so never put secrets in them.
@@ -73,6 +74,27 @@ adapter.ask({ messages, signal, onToken }) // messages: [{ role: 'user' | 'assis
 - **Today** it uses `localAdapter`, which answers from `src/data` (intents in `knowledge.js`) and streams word by word.
 - **To connect an AI API**, set `VITE_SIRI_API_URL`. Siri then POSTs `{ messages }` to that URL and accepts either a streamed text body or JSON `{ reply }`. See `httpAdapter.js`.
 - Keep model provider keys on your server (for example a serverless function that calls the model). Anything in the browser is public.
+
+## Firebase
+
+The config is read from `VITE_FIREBASE_*` in `.env` and never written in code. Copy the values from Firebase console › Project settings › Your apps, and add the same variables to your hosting provider's environment settings.
+
+```js
+import { readOnce, subscribe, write, pushChild, increment } from '@/services/firebase'
+import { useRealtimeValue } from '@/hooks/useRealtimeValue'
+
+const { data, loading, error } = useRealtimeValue('stats/views') // live in React
+```
+
+- **Lazy loading.** Every SDK loads on demand, so the first page load stays light. Analytics starts after the page is idle, in production builds only.
+- **Security.** A Firebase web config is not a secret. It ends up in the browser bundle of any site that uses Firebase. Keeping it in `.env` keeps it out of the repository, but real protection comes from:
+  - Realtime Database rules (the database is currently fully locked),
+  - restricting the API key to your domains in Google Cloud console › Credentials,
+  - optionally, App Check.
+
+## Icons
+
+`npm run icons` crops the face from `public/fayyaz_avatar.jpg` (local source artwork, git-ignored) into the favicon, the Apple touch icon and the web-app manifest icons in `public/icons/`.
 
 ## Résumé
 

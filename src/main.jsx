@@ -17,3 +17,7 @@ createRoot(document.getElementById('root')).render(
 )
 
 greetDevelopers(profile.email)
+
+// Analytics loads after the page is idle so it never competes with the first render (production only).
+const whenIdle = window.requestIdleCallback ?? ((callback) => window.setTimeout(callback, 2000))
+whenIdle(() => import('@/services/firebase').then(({ initAnalytics }) => initAnalytics()))

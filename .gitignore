@@ -38,3 +38,6 @@ doc
 # Résumé: private copies with references
 resume/output
 resume/*.local.json
+
+# Avatar source artwork (2 MB): used locally by `npm run icons`, the generated icons are committed
+public/fayyaz_avatar.jpg
