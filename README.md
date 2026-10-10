@@ -22,7 +22,8 @@ Copy `.env.example` to `.env` and fill it in. Every variable is read in one plac
 | --- | --- |
 | `VITE_CONTACT_EMAIL` | mailto links, copy email, terminal, chat hand-off |
 | `VITE_CONTACT_PHONE` | the Call button and the terminal's `contact` command |
-| `VITE_SIRI_API_URL` | your AI endpoint for Siri (empty = answers from local portfolio data) |
+| `VITE_SIRI_API_URL` | Siri's AI endpoint, `/api/siri/chat` (empty = offline keyword Siri only) |
+| `GEMINI_API_KEY`, `GEMINI_MODEL` | server-only Gemini settings for Siri |
 | `VITE_FIREBASE_*` | Firebase web config: Realtime Database and Analytics (see Firebase below) |
 | `VITE_APP_NAME`, `VITE_APP_URL`, `VITE_PORT` | app metadata and the dev server port |
 
@@ -71,9 +72,12 @@ The UI lives in `src/components/system/Siri/`. The "brain" lives in `src/service
 adapter.ask({ messages, signal, onToken }) // messages: [{ role: 'user' | 'assistant', content }]
 ```
 
-- **Today** it uses `localAdapter`, which answers from `src/data` (intents in `knowledge.js`) and streams word by word.
-- **To connect an AI API**, set `VITE_SIRI_API_URL`. Siri then POSTs `{ messages }` to that URL and accepts either a streamed text body or JSON `{ reply }`. See `httpAdapter.js`.
-- Keep model provider keys on your server (for example a serverless function that calls the model). Anything in the browser is public.
+- **The AI brain** is Gemini, behind the Vercel function `api/siri/chat.js`. `VITE_SIRI_API_URL=/api/siri/chat` points Siri at it.
+  - The key (`GEMINI_API_KEY`) and model (`GEMINI_MODEL`, default `gemini-flash-lite-latest`) are server-only env vars.
+  - The system prompt (`api/_lib/siriPrompt.js`) is built from `resume/resume.data.mjs`, so Siri knows what the CV says.
+  - Siri answers only about Fayyaz and always introduces itself as *Siri, developed by Fayyaz Ali*.
+- **The offline backup** is `localAdapter`. It uses keyword intents from `src/data` (`knowledge.js`). `fallbackAdapter.js` switches to it automatically when the AI fails: no key, quota reached, timeout, server error or an empty reply. After a quota or server error the AI is skipped for 5 minutes.
+- **Quota protection** in the function covers message and history size limits, a cap on answer length, roughly 20 questions per 10 minutes per visitor, and a same-site origin check.
 
 ## Firebase
 
