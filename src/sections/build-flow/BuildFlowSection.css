@@ -26,11 +26,25 @@
     background: var(--fill);
   }
 
-  .endpoint-flow__packet {
+  /*
+   * The packet runs along a track the size of the rail. The track is a size container,
+   * so the packet can travel with `transform` in container units (GPU, no relayout).
+   */
+  .endpoint-flow__track {
     position: absolute;
     top: 26px;
+    right: 6%;
     left: 6%;
     z-index: 2;
+    height: 15px;
+    container-type: size;
+    pointer-events: none;
+  }
+
+  .endpoint-flow__packet {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 15px;
     height: 15px;
     border-radius: 50%;
@@ -38,42 +52,43 @@
     box-shadow:
       0 0 0 5px rgba(10, 132, 255, 0.35),
       0 0 24px 4px var(--blue);
+    will-change: transform, opacity;
     animation: endpoint-travel-x 6s cubic-bezier(0.6, 0, 0.4, 1) infinite;
   }
 
   @keyframes endpoint-travel-x {
     0% {
-      left: 6%;
       opacity: 0;
+      transform: translateX(0);
     }
     5% {
       opacity: 1;
     }
     90% {
-      left: calc(94% - 15px);
       opacity: 1;
+      transform: translateX(calc(100cqw - 15px));
     }
     100% {
-      left: calc(94% - 15px);
       opacity: 0;
+      transform: translateX(calc(100cqw - 15px));
     }
   }
 
   @keyframes endpoint-travel-y {
     0% {
-      top: 0;
       opacity: 0;
+      transform: translateY(0);
     }
     5% {
       opacity: 1;
     }
     90% {
-      top: calc(100% - 15px);
       opacity: 1;
+      transform: translateY(calc(100cqh - 15px));
     }
     100% {
-      top: calc(100% - 15px);
       opacity: 0;
+      transform: translateY(calc(100cqh - 15px));
     }
   }
 
@@ -127,9 +142,16 @@
       height: auto;
     }
 
-    .endpoint-flow__packet {
+    .endpoint-flow__track {
       top: 0;
+      right: auto;
+      bottom: 0;
       left: 25px;
+      width: 15px;
+      height: auto;
+    }
+
+    .endpoint-flow__packet {
       animation-name: endpoint-travel-y;
     }
 

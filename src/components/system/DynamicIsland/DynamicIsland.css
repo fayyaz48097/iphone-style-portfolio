@@ -52,10 +52,13 @@
     height: 14px;
   }
 
+  /* scaled, not resized: transform animates on the GPU without relayout */
   .island__wave-bar {
     width: 3px;
+    height: 14px;
     border-radius: 2px;
     background: var(--green);
+    will-change: transform;
     animation: island-wave 1s ease-in-out infinite;
   }
 
@@ -74,11 +77,16 @@
   @keyframes island-wave {
     0%,
     100% {
-      height: 4px;
+      transform: scaleY(0.28);
     }
     50% {
-      height: 14px;
+      transform: scaleY(1);
     }
+  }
+
+  /* the waveform is invisible while the island is expanded */
+  .island--open .island__wave-bar {
+    animation-play-state: paused;
   }
 
   /* expanded notification */

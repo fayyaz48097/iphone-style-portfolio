@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useEventListener } from '@/hooks/useEventListener'
-import { OverlayContext } from './overlay-context'
+import { OverlayActionsContext, OverlayStateContext } from './overlay-context'
 
 export function OverlayProvider({ children }) {
   const [active, setActive] = useState(null)
@@ -18,10 +18,17 @@ export function OverlayProvider({ children }) {
     { enabled: active !== null },
   )
 
-  const value = useMemo(
-    () => ({ active, open, close, toggle, isOpen: (name) => active === name }),
-    [active, open, close, toggle],
-  )
+  // lets CSS pause background work (the drifting wallpaper) while an overlay covers the page
+  useEffect(() => {
+    document.documentElement.classList.toggle('has-overlay', active !== null)
+  }, [active])
 
-  return <OverlayContext value={value}>{children}</OverlayContext>
+  const actions = useMemo(() => ({ open, close, toggle }), [open, close, toggle])
+  const state = useMemo(() => ({ active, isOpen: (name) => active === name }), [active])
+
+  return (
+    <OverlayActionsContext value={actions}>
+      <OverlayStateContext value={state}>{children}</OverlayStateContext>
+    </OverlayActionsContext>
+  )
 }

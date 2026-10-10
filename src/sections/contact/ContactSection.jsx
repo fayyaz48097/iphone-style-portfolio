@@ -5,13 +5,13 @@ import { contactSection } from '@/data/contact'
 import { profile } from '@/data/profile'
 import { useAppActions } from '@/hooks/useAppActions'
 import { mailto, tel } from '@/lib/links'
-import { useOverlay } from '@/providers/overlay/overlay-context'
+import { useOverlayActions } from '@/providers/overlay/overlay-context'
 import { ChatWindow } from './ChatWindow'
 import './ContactSection.css'
 
 export function ContactSection() {
   const { copyEmail } = useAppActions()
-  const { open } = useOverlay()
+  const { open } = useOverlayActions()
 
   return (
     <Section id={SECTION_IDS.contact} heading={contactSection} align="center">

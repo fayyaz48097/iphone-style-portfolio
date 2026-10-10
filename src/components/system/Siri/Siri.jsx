@@ -4,6 +4,7 @@ import { siriContent } from '@/data/siri'
 import { useDialogFocus } from '@/hooks/useDialogFocus'
 import { useLongPress } from '@/hooks/useLongPress'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useScrollPast } from '@/hooks/useScrollPast'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import { cn } from '@/lib/cn'
 import { speak, stopSpeaking } from '@/lib/speech'
@@ -15,6 +16,8 @@ import { SiriOrb } from './SiriOrb'
 import { SiriPanel } from './SiriPanel'
 import { useSiri } from './useSiri'
 import './Siri.css'
+
+const HERO_SCROLL_OFFSET = 120
 
 /**
  * Siri assistant: bottom-right orb, Apple Intelligence edge glow and a chat panel.
@@ -30,6 +33,8 @@ export function Siri() {
   const { reduceMotion } = useSettings()
   const finePointer = useMediaQuery(MEDIA_QUERIES.finePointer)
   const visible = isOpen(OVERLAYS.siri)
+  // phones hide the orb over the lock screen (see Siri.css), like iOS; it springs in on scroll
+  const pastHero = useScrollPast(HERO_SCROLL_OFFSET)
 
   const siri = useSiri({ client: siriClient, instant: reduceMotion })
   const { ask: askSiri } = siri
@@ -82,7 +87,7 @@ export function Siri() {
       <SiriEdgeGlow active={visible} state={status} />
       <div className={cn('siri-scrim', visible && 'siri-scrim--visible')} onClick={close} aria-hidden="true" />
 
-      <div className={cn('siri', visible && 'siri--open')}>
+      <div className={cn('siri', visible && 'siri--open', !visible && !pastHero && 'siri--at-top')}>
         <SiriPanel
           id={panelId}
           visible={visible}

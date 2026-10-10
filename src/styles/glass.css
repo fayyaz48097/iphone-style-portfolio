@@ -50,6 +50,16 @@
     background: radial-gradient(120% 70% at 20% 0%, rgba(255, 255, 255, calc(0.28 - 0.2 * var(--tint))), transparent 55%);
   }
 
+  /*
+   * Glass inside glass (the home-screen dock, the Siri orb in the panel...) is already
+   * over a blurred surface: a second backdrop blur costs a full extra render pass for
+   * an invisible difference, so nested glass keeps its tint but skips the blur.
+   */
+  .glass .glass {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
   /* real refraction where the browser supports SVG backdrop filters (see LiquidFilter) */
   html.has-refraction .glass--lens {
     -webkit-backdrop-filter: blur(var(--blur-lens, 11px)) saturate(1.9);

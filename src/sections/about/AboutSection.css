@@ -34,17 +34,33 @@
   }
 
   .bento-card__live-dot {
+    position: relative;
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: var(--green);
-    box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.6);
-    animation: bento-pulse 2s infinite;
+  }
+
+  /* pulse ring: scale + opacity (GPU) instead of an animated box-shadow (repaint) */
+  .bento-card__live-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(48, 209, 88, 0.6);
+    will-change: transform, opacity;
+    animation: bento-pulse 2s ease-out infinite;
   }
 
   @keyframes bento-pulse {
-    70% {
-      box-shadow: 0 0 0 8px rgba(48, 209, 88, 0);
+    0% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: scale(3);
     }
   }
 
@@ -119,19 +135,22 @@
 
   .now-playing-bar__progress {
     display: block;
-    width: 40%;
+    width: 100%;
     height: 100%;
     border-radius: 5px;
     background: var(--text);
+    transform-origin: left;
+    will-change: transform;
     animation: now-playing 14s linear infinite;
   }
 
+  /* scaleX instead of width: no relayout every frame */
   @keyframes now-playing {
     from {
-      width: 8%;
+      transform: scaleX(0.08);
     }
     to {
-      width: 96%;
+      transform: scaleX(0.96);
     }
   }
 

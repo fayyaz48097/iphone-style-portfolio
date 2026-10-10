@@ -1,7 +1,7 @@
 import { glass } from '@/components/ui/glass'
 import { cn } from '@/lib/cn'
 import { externalLinkProps } from '@/lib/links'
-import { useOverlay } from '@/providers/overlay/overlay-context'
+import { useOverlayActions } from '@/providers/overlay/overlay-context'
 import './LockWidget.css'
 
 const RING_RADIUS = 30
@@ -20,7 +20,7 @@ function ProgressRing() {
  * type: 'link' (anchor) | 'overlay' (opens an overlay) | 'stat' | 'ring'
  */
 export function LockWidget({ widget }) {
-  const { open } = useOverlay()
+  const { open } = useOverlayActions()
   const base = cn(glass({ lens: true }), 'lock-widget')
 
   switch (widget.type) {

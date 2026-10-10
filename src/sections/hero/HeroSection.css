@@ -182,6 +182,12 @@
     }
   }
 
+  @media (max-width: 360px) {
+    .lock-screen__widgets {
+      gap: 0.35rem;
+    }
+  }
+
   /* short screens */
   @media (max-height: 720px) {
     .lock-screen {
@@ -222,7 +228,7 @@
 
     .lock-screen__content {
       display: grid;
-      grid-template-columns: auto minmax(0, 24rem);
+      grid-template-columns: auto minmax(0, 28rem);
       grid-template-areas:
         'depth date'
         'depth tagline'

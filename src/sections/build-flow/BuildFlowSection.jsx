@@ -43,7 +43,9 @@ export function BuildFlowSection() {
               </div>
             </li>
           ))}
-          <li ref={packetRef} className="endpoint-flow__packet" aria-hidden="true" />
+          <li className="endpoint-flow__track" aria-hidden="true">
+            <span ref={packetRef} className="endpoint-flow__packet" />
+          </li>
         </ol>
       </Reveal>
     </Section>

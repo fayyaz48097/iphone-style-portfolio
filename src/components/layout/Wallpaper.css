@@ -68,4 +68,12 @@
       filter: blur(60px);
     }
   }
+
+  /*
+   * Every glass surface re-blurs whatever moves behind it. While an overlay is open
+   * the wallpaper is mostly covered, so its drift pauses and the overlay stays smooth.
+   */
+  .has-overlay .wallpaper__blob {
+    animation-play-state: paused;
+  }
 }
