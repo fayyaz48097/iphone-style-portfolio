@@ -1,0 +1,160 @@
+/* iOS widget bento grid */
+@layer components {
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 170px;
+    gap: 18px;
+  }
+
+  .bento-card {
+    display: flex;
+    flex-direction: column;
+    padding: 18px 20px;
+    overflow: hidden;
+    border-radius: 28px;
+  }
+
+  .bento-card--large {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .bento-card--wide {
+    grid-column: span 2;
+  }
+
+  .bento-card__title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text2);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .bento-card__live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.6);
+    animation: bento-pulse 2s infinite;
+  }
+
+  @keyframes bento-pulse {
+    70% {
+      box-shadow: 0 0 0 8px rgba(48, 209, 88, 0);
+    }
+  }
+
+  .bento-card__metric {
+    margin-top: auto;
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .bento-card__caption {
+    margin-top: 0.3rem;
+    color: var(--text2);
+    font-size: 0.9rem;
+  }
+
+  .bento-card__paragraph {
+    margin: 0.7rem 0 0;
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  .bento-card__paragraph + .bento-card__paragraph {
+    color: var(--text2);
+    font-size: 0.95rem;
+  }
+
+  .bento-card__row {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: auto;
+  }
+
+  .bento-card__row-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .bento-card__heading {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .bento-card__checklist {
+    display: grid;
+    gap: 0.35rem;
+    margin: auto 0 0;
+    padding: 0;
+    font-size: 0.95rem;
+    list-style: none;
+  }
+
+  .bento-card__checklist li::before {
+    content: '✓';
+    margin-right: 0.5rem;
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  /* "Now playing" scrubber */
+  .now-playing-bar {
+    height: 5px;
+    margin-top: 0.6rem;
+    overflow: hidden;
+    border-radius: 5px;
+    background: var(--fill);
+  }
+
+  .now-playing-bar__progress {
+    display: block;
+    width: 40%;
+    height: 100%;
+    border-radius: 5px;
+    background: var(--text);
+    animation: now-playing 14s linear infinite;
+  }
+
+  @keyframes now-playing {
+    from {
+      width: 8%;
+    }
+    to {
+      width: 96%;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .bento {
+      grid-template-columns: repeat(2, 1fr);
+      /* rows grow with their text on narrow screens instead of clipping it */
+      grid-auto-rows: minmax(150px, auto);
+      gap: 14px;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .bento-card .app-icon {
+      --app-icon-size: 60px;
+      font-size: 1.1rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .bento-card .app-icon {
+      --app-icon-size: 54px;
+      font-size: 1rem;
+    }
+  }
+}

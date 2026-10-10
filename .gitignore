@@ -1,0 +1,40 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment (keep only the template)
+.env
+.env.*
+!.env.example
+
+# Tooling caches
+.cache
+.vite
+coverage
+*.tsbuildinfo
+Thumbs.db
+doc
+# Résumé: private copies with references
+resume/output
+resume/*.local.json

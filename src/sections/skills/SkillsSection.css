@@ -1,0 +1,160 @@
+/* iOS home screen of skills */
+@layer components {
+  .home-screen {
+    padding: clamp(1.4rem, 4vw, 2.4rem) clamp(1rem, 4vw, 2.5rem) 1.2rem;
+    border-radius: 40px;
+  }
+
+  .home-screen__grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.6rem 1rem;
+    justify-items: center;
+  }
+
+  .home-screen__dots {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    margin: 1.6rem 0 1rem;
+  }
+
+  .home-screen__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--text3);
+  }
+
+  .home-screen__dot:first-child {
+    background: var(--text);
+  }
+
+  .home-screen__dock {
+    display: flex;
+    justify-content: center;
+    gap: clamp(0.8rem, 3vw, 1.6rem);
+    width: max-content;
+    max-width: 100%;
+    margin-inline: auto;
+    padding: 14px 18px;
+    border-radius: 32px;
+  }
+
+  /* launcher = icon + label button */
+  .app-launcher {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    width: 84px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  .home-screen__dock .app-launcher {
+    width: auto;
+  }
+
+  .app-launcher__label {
+    color: var(--text);
+    font-size: 0.76rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .app-launcher:hover .app-icon {
+    transform: translateY(-6px) scale(1.06);
+  }
+
+  .app-launcher:active .app-icon {
+    transform: scale(0.9);
+  }
+
+  /* edit mode ("jiggle") */
+  .home-screen--editing .app-icon {
+    animation: home-screen-jiggle 0.28s ease-in-out infinite alternate;
+  }
+
+  .home-screen--editing .app-launcher:nth-child(even) .app-icon {
+    animation-delay: -0.14s;
+  }
+
+  .home-screen--editing .app-icon::before {
+    content: '–';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    z-index: 2;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(120, 120, 128, 0.9);
+    color: #fff;
+    font-size: 14px;
+    line-height: 17px;
+  }
+
+  @keyframes home-screen-jiggle {
+    from {
+      transform: rotate(-2.2deg);
+    }
+    to {
+      transform: rotate(2.2deg);
+    }
+  }
+
+  @media (max-width: 860px) {
+    .home-screen__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .home-screen__grid {
+      gap: 1.3rem 0.4rem;
+    }
+
+    .app-launcher {
+      width: 72px;
+    }
+
+    .home-screen .app-icon {
+      --app-icon-size: 60px;
+      font-size: 1.1rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .home-screen {
+      padding-inline: 0.6rem;
+    }
+
+    .home-screen__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.1rem 0.2rem;
+    }
+
+    .app-launcher {
+      width: 100%;
+    }
+
+    .home-screen .app-icon {
+      --app-icon-size: 54px;
+      font-size: 1rem;
+    }
+
+    .app-launcher__label {
+      font-size: 0.68rem;
+    }
+
+    .home-screen__dock {
+      gap: 0.6rem;
+      padding: 10px 12px;
+    }
+  }
+}

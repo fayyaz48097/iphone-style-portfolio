@@ -1,0 +1,15 @@
+@layer components {
+  .section {
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+    scroll-margin-top: 60px;
+  }
+
+  .section--flush-top {
+    padding-top: 0;
+  }
+
+  .page-container {
+    width: min(1080px, 100% - 2rem);
+    margin-inline: auto;
+  }
+}

@@ -1,0 +1,342 @@
+/* Résumé share sheet: glass card with a floating paper preview and a download button */
+@layer components {
+  .resume-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 88;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: rgba(8, 2, 40, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s var(--ease);
+  }
+
+  .resume-sheet--open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .resume-sheet__panel {
+    width: min(620px, 100%);
+    max-height: calc(100svh - 2rem);
+    padding: 10px 22px 24px;
+    overflow-y: auto;
+    border-radius: 34px;
+    transform: translateY(60px) scale(0.94);
+    transition: transform 0.6s var(--spring);
+  }
+
+  .resume-sheet--open .resume-sheet__panel {
+    transform: none;
+  }
+
+  .resume-sheet__grabber {
+    display: block;
+    width: 38px;
+    height: 5px;
+    margin: 0 auto 6px;
+    border-radius: 5px;
+    background: var(--text3);
+  }
+
+  .resume-sheet__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .resume-sheet__title {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .resume-sheet__close {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--fill);
+    color: var(--text2);
+    cursor: pointer;
+    transition: transform 0.3s var(--spring);
+  }
+
+  .resume-sheet__close:active {
+    transform: scale(0.88);
+  }
+
+  .resume-sheet__close svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .resume-sheet__body {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+    align-items: start;
+    gap: 24px;
+  }
+
+  /* the page preview floats like a sheet of paper */
+  .resume-sheet__paper {
+    display: block;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.06),
+      0 18px 40px -16px rgba(20, 8, 47, 0.55);
+    transform: perspective(900px) rotateY(10deg) rotateX(4deg) translateY(20px);
+    opacity: 0;
+    transition:
+      transform 0.5s var(--spring),
+      box-shadow 0.4s;
+  }
+
+  .resume-sheet--open .resume-sheet__paper {
+    animation:
+      resume-paper-in 0.8s var(--spring) 0.12s both,
+      resume-paper-float 5s ease-in-out 1s infinite alternate;
+  }
+
+  .resume-sheet__paper:hover {
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.06),
+      0 26px 50px -16px rgba(20, 8, 47, 0.6);
+  }
+
+  .resume-sheet__paper img {
+    width: 100%;
+    height: auto;
+  }
+
+  .resume-sheet__details {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .resume-sheet__file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .resume-sheet__file-text {
+    min-width: 0;
+  }
+
+  .resume-sheet__file-name {
+    display: block;
+    overflow: hidden;
+    font-size: 0.98rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .resume-sheet__meta {
+    display: block;
+    color: var(--text2);
+    font-size: 0.82rem;
+  }
+
+  .resume-sheet__summary {
+    margin: 0;
+    color: var(--text2);
+    font-size: 0.95rem;
+  }
+
+  .resume-sheet__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .resume-sheet__tag {
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: var(--fill);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .resume-sheet--open .resume-sheet__tag {
+    animation: resume-pop 0.5s var(--spring) both;
+    animation-delay: calc(var(--i) * 60ms + 0.3s);
+  }
+
+  .resume-sheet__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .resume-sheet__open {
+    padding-block: 0.75rem;
+  }
+
+  .resume-sheet__open-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* ---------- download button ---------- */
+
+  .download-button {
+    position: relative;
+    display: inline-flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 190px;
+    padding: 0.75rem 1.3rem;
+    overflow: hidden;
+    border: 0;
+    border-radius: 999px;
+    background: var(--btn);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    isolation: isolate;
+    box-shadow: 0 12px 30px -12px var(--blue);
+    transition:
+      transform 0.35s var(--spring),
+      background 0.35s;
+  }
+
+  .download-button:active {
+    transform: scale(0.95);
+  }
+
+  .download-button__icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* liquid fill that sweeps across while "downloading" */
+  .download-button__progress {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, #5b2bff, #ff4fd8);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .download-button--downloading .download-button__progress {
+    animation: download-fill 0.9s var(--ease) forwards;
+  }
+
+  .download-button--downloading .download-button__icon {
+    animation: download-bob 0.6s ease-in-out infinite alternate;
+  }
+
+  .download-button--done {
+    background: var(--green);
+    box-shadow: 0 12px 30px -12px var(--green);
+  }
+
+  .download-button--done .download-button__icon {
+    animation: resume-pop 0.45s var(--spring) both;
+  }
+
+  /* ---------- keyframes ---------- */
+
+  @keyframes resume-paper-in {
+    from {
+      opacity: 0;
+      transform: perspective(900px) rotateY(18deg) rotateX(8deg) translateY(40px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: perspective(900px) rotateY(6deg) rotateX(3deg);
+    }
+  }
+
+  @keyframes resume-paper-float {
+    from {
+      opacity: 1;
+      transform: perspective(900px) rotateY(6deg) rotateX(3deg) translateY(0);
+    }
+    to {
+      opacity: 1;
+      transform: perspective(900px) rotateY(-3deg) rotateX(1deg) translateY(-6px);
+    }
+  }
+
+  @keyframes resume-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes download-fill {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes download-bob {
+    from {
+      transform: translateY(-2px);
+    }
+    to {
+      transform: translateY(3px);
+    }
+  }
+
+  /* phones: a real bottom sheet */
+  @media (max-width: 620px) {
+    .resume-sheet {
+      align-items: end;
+      padding: 0;
+    }
+
+    .resume-sheet__panel {
+      width: 100%;
+      max-height: 92svh;
+      padding: 10px 18px calc(env(safe-area-inset-bottom, 0px) + 22px);
+      border-radius: 34px 34px 0 0;
+      transform: translateY(100%);
+    }
+
+    .resume-sheet__body {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .resume-sheet__paper {
+      width: min(200px, 60%);
+      margin-inline: auto;
+    }
+  }
+}
+
+/* with motion off the paper must still be visible */
+html.motion-off .resume-sheet__paper {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resume-sheet__paper {
+    opacity: 1;
+  }
+}

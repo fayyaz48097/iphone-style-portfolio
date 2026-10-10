@@ -1,0 +1,24 @@
+@layer components {
+  .section-heading__title {
+    margin: 0 0 0.4rem;
+    font-size: clamp(2.1rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+  }
+
+  .section-heading__subtitle {
+    max-width: 56ch;
+    margin: 0 0 2rem;
+    color: var(--text2);
+    font-size: 1.05rem;
+  }
+
+  .section-heading--center {
+    text-align: center;
+  }
+
+  .section-heading--center .section-heading__subtitle {
+    margin-inline: auto;
+  }
+}

@@ -1,0 +1,148 @@
+/* Request lifecycle: a glowing packet travels along the rail and lights each step */
+@layer components {
+  .endpoint-flow {
+    padding: clamp(1.4rem, 4vw, 2.4rem);
+    border-radius: 32px;
+  }
+
+  .endpoint-flow__steps {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* rail */
+  .endpoint-flow__steps::before {
+    content: '';
+    position: absolute;
+    top: 32px;
+    right: 6%;
+    left: 6%;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--fill);
+  }
+
+  .endpoint-flow__packet {
+    position: absolute;
+    top: 26px;
+    left: 6%;
+    z-index: 2;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow:
+      0 0 0 5px rgba(10, 132, 255, 0.35),
+      0 0 24px 4px var(--blue);
+    animation: endpoint-travel-x 6s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+  }
+
+  @keyframes endpoint-travel-x {
+    0% {
+      left: 6%;
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    90% {
+      left: calc(94% - 15px);
+      opacity: 1;
+    }
+    100% {
+      left: calc(94% - 15px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes endpoint-travel-y {
+    0% {
+      top: 0;
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    90% {
+      top: calc(100% - 15px);
+      opacity: 1;
+    }
+    100% {
+      top: calc(100% - 15px);
+      opacity: 0;
+    }
+  }
+
+  .endpoint-flow__step {
+    position: relative;
+    padding: 0 0.3rem;
+    text-align: center;
+  }
+
+  .endpoint-flow__icon {
+    margin: 0 auto 0.8rem;
+    transition:
+      transform 0.45s var(--spring),
+      box-shadow 0.45s;
+  }
+
+  .endpoint-flow__step--active .endpoint-flow__icon {
+    transform: translateY(-6px) scale(1.12);
+    box-shadow:
+      0 0 0 4px rgba(10, 132, 255, 0.35),
+      0 16px 30px -10px var(--blue);
+  }
+
+  .endpoint-flow__title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .endpoint-flow__description {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--text2);
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  /* vertical rail on narrow screens */
+  @media (max-width: 860px) {
+    .endpoint-flow__steps {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .endpoint-flow__steps::before {
+      top: 0;
+      right: auto;
+      bottom: 0;
+      left: 31px;
+      width: 3px;
+      height: auto;
+    }
+
+    .endpoint-flow__packet {
+      top: 0;
+      left: 25px;
+      animation-name: endpoint-travel-y;
+    }
+
+    .endpoint-flow__step {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      align-items: center;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .endpoint-flow__icon {
+      margin: 0;
+    }
+  }
+}

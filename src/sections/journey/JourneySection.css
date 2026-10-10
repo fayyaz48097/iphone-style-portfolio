@@ -1,0 +1,83 @@
+/* iOS notification stack */
+@layer components {
+  .notification-stack {
+    position: relative;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+    /* keeps the <Reveal> transitions alongside the height animation */
+    transition:
+      height 0.6s var(--spring),
+      opacity 0.9s var(--ease) var(--reveal-delay, 0s),
+      transform 0.9s var(--spring) var(--reveal-delay, 0s);
+  }
+
+  .notification-stack--collapsed {
+    cursor: pointer;
+  }
+
+  .notification-card {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 0.8rem;
+    margin-bottom: 12px;
+    padding: 14px 16px;
+    border-radius: 26px;
+    transform-origin: top center;
+    will-change: transform;
+    transition:
+      transform 0.6s var(--spring),
+      opacity 0.4s;
+  }
+
+  .notification-card__inner {
+    transition: opacity 0.35s;
+  }
+
+  /* only the front card's content is readable while stacked */
+  .notification-stack--collapsed .notification-card:not(:first-child) .notification-card__inner {
+    opacity: 0;
+  }
+
+  .notification-card__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .notification-card__app {
+    font-size: 0.98rem;
+  }
+
+  .notification-card__time {
+    color: var(--text2);
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+
+  .notification-card__title {
+    margin: 0.1rem 0 0.15rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .notification-card__body {
+    margin: 0;
+    color: var(--text2);
+    font-size: 0.92rem;
+    line-height: 1.4;
+  }
+
+  .stack-toggle {
+    display: block;
+    margin: 0.4rem auto 0;
+    padding: 0.55rem 1.1rem;
+    border: 0;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}

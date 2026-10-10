@@ -1,0 +1,31 @@
+/* iPadOS-style pointer: a soft dot that trails the cursor and grows over controls */
+@layer components {
+  .pointer-follower {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: rgba(120, 120, 128, 0.45);
+    /* parked off-screen until the first pointer move */
+    transform: translate(-100px, -100px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    transition:
+      width 0.3s var(--spring),
+      height 0.3s var(--spring),
+      margin 0.3s var(--spring),
+      opacity 0.2s;
+  }
+
+  .pointer-follower--hover {
+    width: 52px;
+    height: 52px;
+    margin: -26px 0 0 -26px;
+    opacity: 0.5;
+  }
+}

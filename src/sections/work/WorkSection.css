@@ -1,0 +1,152 @@
+/* App Store "Today" card */
+@layer components {
+  .today-card {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    min-width: 0;
+    min-height: 380px;
+    margin-bottom: 22px;
+    overflow: hidden;
+    border-radius: 32px;
+  }
+
+  .today-card__art {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-width: 0;
+    padding: 28px;
+    overflow: hidden;
+    color: #fff;
+    background:
+      radial-gradient(90% 90% at 80% 90%, #ff4fd8 0%, transparent 55%),
+      radial-gradient(80% 80% at 10% 10%, #5b2bff 0%, transparent 60%),
+      linear-gradient(140deg, #1a067f, #39097f);
+  }
+
+  .today-card__eyebrow {
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0.8;
+  }
+
+  .today-card__title {
+    margin: 0.2rem 0 0;
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+
+  .today-card__summary {
+    max-width: 28ch;
+    margin: 0.5rem 0 0;
+    opacity: 0.85;
+  }
+
+  /* animated glass bar chart */
+  .today-card__bars {
+    position: absolute;
+    top: 26px;
+    right: 26px;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 140px;
+  }
+
+  .today-card__bar {
+    width: 18px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.3);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transform-origin: bottom;
+    animation: today-bar 3.2s var(--ease) infinite alternate;
+  }
+
+  .today-card__bar:nth-child(1) {
+    height: 40%;
+  }
+
+  .today-card__bar:nth-child(2) {
+    height: 70%;
+    animation-delay: 0.3s;
+  }
+
+  .today-card__bar:nth-child(3) {
+    height: 55%;
+    animation-delay: 0.6s;
+  }
+
+  .today-card__bar:nth-child(4) {
+    height: 90%;
+    animation-delay: 0.9s;
+  }
+
+  @keyframes today-bar {
+    to {
+      transform: scaleY(0.6);
+    }
+  }
+
+  .today-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    min-width: 0;
+    padding: 26px 28px;
+  }
+
+  .today-card__highlights {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: var(--text2);
+    list-style: disc;
+  }
+
+  .today-card__highlights li {
+    margin-bottom: 0.5rem;
+  }
+
+  .today-card__footer {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--edge);
+  }
+
+  .today-card__app-name {
+    display: block;
+    font-size: 1rem;
+  }
+
+  .today-card__app-category {
+    color: var(--text2);
+  }
+
+  @media (max-width: 860px) {
+    .today-card {
+      grid-template-columns: 1fr;
+    }
+
+    .today-card__art {
+      min-height: 280px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .today-card__title {
+      font-size: 2.2rem;
+    }
+
+    .today-card__bars {
+      transform: scale(0.7);
+      transform-origin: top right;
+    }
+  }
+}

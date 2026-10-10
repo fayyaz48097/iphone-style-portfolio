@@ -1,0 +1,740 @@
+/*
+ * Siri: orb launcher, Apple Intelligence edge glow, and the conversation panel.
+ * Status-driven animation is keyed off [data-state]: idle | listening | thinking | responding | error.
+ */
+
+/* animatable angle for the rotating conic gradients */
+@property --siri-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@layer components {
+  /* ================= ORB ================= */
+
+  .siri-orb {
+    --orb-size: 44px;
+
+    position: relative;
+    display: block;
+    flex: none;
+    width: var(--orb-size);
+    height: var(--orb-size);
+    isolation: isolate;
+  }
+
+  .siri-orb--sm {
+    --orb-size: 34px;
+  }
+
+  .siri-orb--lg {
+    --orb-size: 58px;
+  }
+
+  /* the petals' colours spilling softly around the sphere; brightens while active */
+  .siri-orb__halo {
+    position: absolute;
+    inset: -14%;
+    z-index: -1;
+    border-radius: 50%;
+    background: conic-gradient(from var(--siri-angle), #ff2d55, #a855f7, #0a84ff, #2fe0a8, #ff2d55);
+    filter: blur(calc(var(--orb-size) * 0.2));
+    opacity: 0.35;
+    animation: siri-angle 5s linear infinite;
+    transition: opacity 0.4s;
+  }
+
+  /* Liquid Glass sphere behind the petals */
+  .siri-orb__glass {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+  }
+
+  .siri-orb__body {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    border-radius: 50%;
+  }
+
+  /*
+   * Petals of light. The viewBox is centred on 0,0 and `view-box` origins are measured
+   * in user units, so `0 0` (not `center`) is the middle of the sphere.
+   */
+  .siri-orb__bloom,
+  .siri-orb__petal,
+  .siri-orb__core {
+    transform-box: view-box;
+    transform-origin: 0 0;
+  }
+
+  .siri-orb__petal {
+    --petal-speed: 5.5s;
+
+    /* normal blending: `screen` would wash the petals out on light glass */
+    transform: rotate(var(--angle));
+    animation: siri-petal var(--petal-speed) ease-in-out var(--delay, 0s) infinite alternate;
+  }
+
+  .siri-orb__bloom--haze {
+    opacity: 0.75;
+  }
+
+  .siri-orb__core {
+    animation: siri-core 2.6s ease-in-out infinite alternate;
+  }
+
+  /* sound rings, only while listening */
+  .siri-orb__ripple {
+    position: absolute;
+    inset: 0;
+    border: 2px solid rgba(255, 79, 216, 0.55);
+    border-radius: 50%;
+    opacity: 0;
+  }
+
+  /* --- states --- */
+
+  .siri-orb[data-state='idle'] .siri-orb__body {
+    animation: siri-breathe 3.2s ease-in-out infinite;
+  }
+
+  /* listening: petals bloom quickly, like a voice level meter */
+  .siri-orb[data-state='listening'] .siri-orb__petal {
+    --petal-speed: 0.45s;
+    animation-name: siri-petal-loud;
+  }
+
+  .siri-orb[data-state='listening'] .siri-orb__body {
+    animation: siri-listen 0.9s ease-in-out infinite alternate;
+  }
+
+  .siri-orb[data-state='listening'] .siri-orb__ripple {
+    animation: siri-ripple 1.6s ease-out infinite;
+  }
+
+  .siri-orb[data-state='listening'] .siri-orb__ripple--late {
+    animation-delay: 0.8s;
+  }
+
+  /* thinking: the whole bloom spins */
+  .siri-orb[data-state='thinking'] .siri-orb__bloom {
+    animation: siri-spin 1.4s linear infinite;
+  }
+
+  .siri-orb[data-state='thinking'] .siri-orb__petal {
+    --petal-speed: 0.9s;
+  }
+
+  .siri-orb[data-state='thinking'] .siri-orb__body {
+    animation: siri-think 1.1s ease-in-out infinite alternate;
+  }
+
+  .siri-orb[data-state='thinking'] .siri-orb__core,
+  .siri-orb[data-state='listening'] .siri-orb__core {
+    animation-duration: 0.6s;
+  }
+
+  .siri-orb[data-state='thinking'] .siri-orb__halo,
+  .siri-orb[data-state='listening'] .siri-orb__halo {
+    opacity: 0.8;
+  }
+
+  /* responding: steady, lively sway while the answer streams */
+  .siri-orb[data-state='responding'] .siri-orb__petal {
+    --petal-speed: 1.3s;
+  }
+
+  .siri-orb[data-state='responding'] .siri-orb__bloom {
+    animation: siri-spin 6s linear infinite;
+  }
+
+  .siri-orb[data-state='error'] {
+    filter: grayscale(0.7);
+  }
+
+  /* ================= SCREEN-EDGE GLOW ================= */
+
+  .siri-glow {
+    --glow-speed: 5s;
+
+    position: fixed;
+    inset: 0;
+    z-index: 74;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.04);
+    transition:
+      opacity 0.5s var(--ease),
+      transform 0.8s var(--spring),
+      visibility 0s linear 0.5s;
+  }
+
+  .siri-glow--active {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition-delay: 0s;
+  }
+
+  /* no point animating an invisible full-screen layer */
+  .siri-glow:not(.siri-glow--active) * {
+    animation-play-state: paused;
+  }
+
+  .siri-glow__ring {
+    position: absolute;
+    inset: 0;
+    padding: 3px;
+    background: conic-gradient(
+      from var(--siri-angle),
+      #ff4fd8,
+      #ff9f43,
+      #ffd60a,
+      #30d1ff,
+      #0a84ff,
+      #7b4dff,
+      #ff4fd8
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: siri-angle var(--glow-speed) linear infinite;
+  }
+
+  .siri-glow__ring--wide {
+    padding: 18px;
+  }
+
+  /* blurred copy of a thick ring: the soft light bleeding onto the page */
+  .siri-glow__haze {
+    position: absolute;
+    inset: 0;
+    filter: blur(20px);
+    opacity: 0.75;
+    animation: siri-glow-breathe 2.6s ease-in-out infinite alternate;
+  }
+
+  .siri-glow[data-state='listening'] {
+    --glow-speed: 2.4s;
+  }
+
+  .siri-glow[data-state='listening'] .siri-glow__haze {
+    animation-duration: 0.9s;
+  }
+
+  .siri-glow[data-state='thinking'] {
+    --glow-speed: 1.3s;
+  }
+
+  .siri-glow[data-state='responding'] {
+    --glow-speed: 3s;
+  }
+
+  /* ================= LAUNCHER + PANEL ================= */
+
+  .siri-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 72;
+    background: radial-gradient(120% 90% at 100% 100%, rgba(8, 2, 40, 0.45), rgba(8, 2, 40, 0.12));
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s var(--ease);
+  }
+
+  .siri-scrim--visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .siri {
+    position: fixed;
+    right: max(18px, env(safe-area-inset-right, 0px));
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+    z-index: 76;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    pointer-events: none;
+  }
+
+  .siri-launcher {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    cursor: pointer;
+    pointer-events: auto;
+    -webkit-touch-callout: none;
+    user-select: none;
+    transition: transform 0.35s var(--spring);
+  }
+
+  .siri-launcher:hover {
+    transform: scale(1.06);
+  }
+
+  .siri-launcher:active {
+    transform: scale(0.9);
+  }
+
+  .siri-launcher:focus-visible {
+    border-radius: 50%;
+  }
+
+  .siri-panel {
+    display: flex;
+    flex-direction: column;
+    width: min(380px, calc(100vw - 32px));
+    max-height: min(560px, calc(100svh - 120px));
+    overflow: hidden;
+    border-radius: 32px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(18px) scale(0.9);
+    transform-origin: bottom right;
+    filter: blur(6px);
+    transition:
+      opacity 0.35s var(--ease),
+      transform 0.55s var(--spring),
+      filter 0.4s var(--ease);
+  }
+
+  .siri--open .siri-panel {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    filter: none;
+  }
+
+  .siri-panel__header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 14px 14px 10px 16px;
+  }
+
+  .siri-panel__title {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .siri-panel__status {
+    display: block;
+    color: var(--text2);
+    font-size: 0.78rem;
+  }
+
+  .siri-panel__actions {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+  }
+
+  .siri-icon-button {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--fill);
+    color: var(--text2);
+    cursor: pointer;
+    transition: transform 0.3s var(--spring);
+  }
+
+  .siri-icon-button:active {
+    transform: scale(0.88);
+  }
+
+  .siri-icon-button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .siri-panel__transcript {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 180px;
+    padding: 4px 16px 14px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* older messages fade out under the header instead of being cut off */
+    -webkit-mask-image: linear-gradient(transparent, #000 14px);
+    mask-image: linear-gradient(transparent, #000 14px);
+  }
+
+  .siri-panel__footnote {
+    margin: 0;
+    padding: 0 16px 12px;
+    color: var(--text3);
+    font-size: 0.72rem;
+    text-align: center;
+  }
+
+  /* --- welcome --- */
+
+  .siri-welcome__title {
+    margin: 6px 0 4px;
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    background: linear-gradient(90deg, #ff4fd8, #7b4dff 45%, #0a84ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: siri-rise 0.6s var(--ease) both;
+  }
+
+  .siri-welcome__intro {
+    margin: 0 0 14px;
+    color: var(--text2);
+    font-size: 0.92rem;
+    animation: siri-rise 0.6s var(--ease) 0.08s both;
+  }
+
+  .siri-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .siri-suggestion {
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--edge);
+    border-radius: 999px;
+    background: var(--fill);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    animation: siri-pop 0.5s var(--spring) both;
+    animation-delay: calc(var(--i) * 60ms + 0.15s);
+    transition:
+      border-color 0.2s,
+      transform 0.3s var(--spring);
+  }
+
+  .siri-suggestion:hover {
+    border-color: var(--blue);
+  }
+
+  .siri-suggestion:active {
+    transform: scale(0.95);
+  }
+
+  /* --- transcript --- */
+
+  .siri-message {
+    margin: 0;
+  }
+
+  .siri-message--user {
+    align-self: flex-end;
+    max-width: 85%;
+    color: var(--text2);
+    font-size: 0.95rem;
+    text-align: right;
+    animation: siri-rise 0.4s var(--ease) both;
+  }
+
+  .siri-message--interim {
+    font-style: italic;
+    opacity: 0.75;
+  }
+
+  .siri-message--assistant {
+    align-self: flex-start;
+    max-width: 100%;
+    padding: 12px 14px;
+    border-radius: 20px 20px 20px 8px;
+    background: var(--bubble-in);
+    font-size: 0.98rem;
+    line-height: 1.45;
+    white-space: pre-line;
+    overflow-wrap: break-word;
+    animation: siri-pop 0.45s var(--spring) both;
+  }
+
+  .siri-message--assistant a {
+    color: var(--blue);
+    font-weight: 600;
+  }
+
+  .siri-message--error {
+    color: #ff6961;
+  }
+
+  .siri-message--thinking {
+    align-self: flex-start;
+    font-weight: 600;
+    background: linear-gradient(90deg, var(--text3), var(--text) 50%, var(--text3));
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: siri-shimmer 1.6s linear infinite;
+  }
+
+  .siri-caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 1em;
+    margin-left: 3px;
+    border-radius: 3px;
+    vertical-align: -0.15em;
+    background: linear-gradient(#ff4fd8, #0a84ff);
+    animation: siri-caret 0.9s ease-in-out infinite;
+  }
+
+  /* --- composer --- */
+
+  .siri-composer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px 10px;
+    border-top: 1px solid var(--edge);
+  }
+
+  .siri-composer__input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--edge);
+    border-radius: 999px;
+    outline: 0;
+    background: var(--fill);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.95rem;
+  }
+
+  .siri-composer__input:focus {
+    border-color: var(--blue);
+  }
+
+  .siri-composer__button {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    cursor: pointer;
+    transition:
+      transform 0.3s var(--spring),
+      background 0.3s,
+      opacity 0.2s;
+  }
+
+  .siri-composer__button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .siri-composer__button:not(:disabled):active {
+    transform: scale(0.88);
+  }
+
+  .siri-composer__button:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .siri-composer__button--mic {
+    background: var(--fill);
+    color: var(--text);
+  }
+
+  .siri-composer__button--listening {
+    background: #ff3b30;
+    color: #fff;
+    animation: siri-mic-pulse 1.2s ease-out infinite;
+  }
+
+  /* ================= KEYFRAMES ================= */
+
+  @keyframes siri-angle {
+    to {
+      --siri-angle: 360deg;
+    }
+  }
+
+  @keyframes siri-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes siri-breathe {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes siri-listen {
+    from {
+      transform: scale(0.96);
+    }
+    to {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes siri-think {
+    from {
+      transform: scale(0.86) rotate(0deg);
+    }
+    to {
+      transform: scale(0.96) rotate(25deg);
+    }
+  }
+
+  /*
+   * A petal turns around the core, folds (skew) and blooms (scale).
+   * --size sets its scale and --flip (1 / -1) mirrors its curl.
+   */
+  @keyframes siri-petal {
+    from {
+      transform: rotate(calc(var(--angle) - 18deg))
+        scale(calc(var(--flip, 1) * var(--size, 1) * 0.82), calc(var(--size, 1) * 0.82)) skewX(-8deg);
+    }
+    to {
+      transform: rotate(calc(var(--angle) + 30deg))
+        scale(calc(var(--flip, 1) * var(--size, 1) * 1.08), calc(var(--size, 1) * 1.08)) skewX(10deg);
+    }
+  }
+
+  /* listening: quick, wide blooms like a voice level meter */
+  @keyframes siri-petal-loud {
+    from {
+      transform: rotate(calc(var(--angle) - 6deg))
+        scale(calc(var(--flip, 1) * var(--size, 1) * 0.7), calc(var(--size, 1) * 0.7)) skewX(-4deg);
+    }
+    to {
+      transform: rotate(calc(var(--angle) + 10deg))
+        scale(calc(var(--flip, 1) * var(--size, 1) * 1.22), calc(var(--size, 1) * 1.22)) skewX(6deg);
+    }
+  }
+
+  @keyframes siri-core {
+    from {
+      opacity: 0.65;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes siri-ripple {
+    from {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+
+  @keyframes siri-glow-breathe {
+    from {
+      opacity: 0.55;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes siri-rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes siri-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.85) translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes siri-shimmer {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  @keyframes siri-caret {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.25;
+    }
+  }
+
+  @keyframes siri-mic-pulse {
+    from {
+      box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.5);
+    }
+    to {
+      box-shadow: 0 0 0 12px rgba(255, 59, 48, 0);
+    }
+  }
+
+  /* ================= RESPONSIVE ================= */
+
+  /* phones and small tablets: sit above the tab bar instead of beside it */
+  @media (max-width: 720px) {
+    .siri {
+      right: 16px;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 86px);
+    }
+
+    .siri .siri-orb--lg {
+      --orb-size: 52px;
+    }
+
+    .siri-panel {
+      max-height: calc(100svh - 230px);
+    }
+  }
+}

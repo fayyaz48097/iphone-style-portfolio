@@ -1,0 +1,26 @@
+@layer components {
+  .pill {
+    margin-left: auto;
+    padding: 0.42rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--fill);
+    color: var(--blue);
+    font-size: 0.9rem;
+    font-weight: 700;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.3s var(--spring);
+  }
+
+  .pill:active {
+    transform: scale(0.9);
+  }
+
+  .pill--soft {
+    color: var(--text2);
+    font-weight: 600;
+    cursor: default;
+  }
+}

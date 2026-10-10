@@ -1,0 +1,71 @@
+/* Animated mesh wallpaper: three blurred colour blobs drifting behind the glass */
+@layer components {
+  .wallpaper {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    background: var(--wall);
+    transition: background 0.6s;
+  }
+
+  .wallpaper__blob {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.85;
+    filter: blur(90px);
+    will-change: transform;
+    transition: background 0.6s;
+  }
+
+  .wallpaper__blob--violet {
+    top: -20vmax;
+    left: -15vmax;
+    width: 60vmax;
+    height: 60vmax;
+    background: var(--w1);
+    animation: wallpaper-drift-1 26s ease-in-out infinite alternate;
+  }
+
+  .wallpaper__blob--pink {
+    right: -15vmax;
+    bottom: -25vmax;
+    width: 55vmax;
+    height: 55vmax;
+    background: var(--w2);
+    animation: wallpaper-drift-2 30s ease-in-out infinite alternate;
+  }
+
+  .wallpaper__blob--blue {
+    top: 30%;
+    left: 40%;
+    width: 40vmax;
+    height: 40vmax;
+    background: var(--w3);
+    animation: wallpaper-drift-3 22s ease-in-out infinite alternate;
+  }
+
+  @keyframes wallpaper-drift-1 {
+    to {
+      transform: translate(25vmax, 18vmax) scale(1.15);
+    }
+  }
+
+  @keyframes wallpaper-drift-2 {
+    to {
+      transform: translate(-22vmax, -15vmax) scale(0.9);
+    }
+  }
+
+  @keyframes wallpaper-drift-3 {
+    to {
+      transform: translate(-18vmax, 12vmax) scale(1.2);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .wallpaper__blob {
+      filter: blur(60px);
+    }
+  }
+}

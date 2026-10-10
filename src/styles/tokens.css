@@ -1,0 +1,95 @@
+/*
+ * Design tokens.
+ * Light values live on :root; dark values apply either from the OS preference
+ * (unless the visitor forced light) or from an explicit data-theme="dark".
+ */
+:root {
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* glass tint, driven by the Control Centre slider (0 = clear, 1 = tinted) */
+  --tint: 0.35;
+  --blur: 19px;
+  --blur-lens: 11px;
+
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --blue: #0a84ff;
+  --btn: #0066d6;
+  --green: #30d158;
+  --pink: #ff4fd8;
+
+  --wall: #eee7ff;
+  --w1: #b9a2ff;
+  --w2: #ffb3e6;
+  --w3: #bfd0ff;
+  --text: #14082f;
+  --text2: rgba(20, 8, 47, 0.62);
+  --text3: rgba(20, 8, 47, 0.4);
+  --glass-rgb: 255, 255, 255;
+  --glass-min: 0.28;
+  --glass-max: 0.82;
+  --hair: rgba(255, 255, 255, 0.7);
+  --edge: rgba(20, 8, 47, 0.08);
+  --shadow: 0 20px 50px -24px rgba(60, 20, 140, 0.45);
+  --fill: rgba(20, 8, 47, 0.06);
+  --bubble-in: rgba(255, 255, 255, 0.85);
+  --clock-gradient: linear-gradient(180deg, #2a0f7a, #7b3be6);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --wall: #0b0340;
+    --w1: #3a12c9;
+    --w2: #8c0b6f;
+    --w3: #1a067f;
+    --text: #ffffff;
+    --text2: rgba(255, 255, 255, 0.66);
+    --text3: rgba(255, 255, 255, 0.42);
+    --glass-rgb: 40, 26, 105;
+    --glass-min: 0.18;
+    --glass-max: 0.78;
+    --hair: rgba(255, 255, 255, 0.28);
+    --edge: rgba(255, 255, 255, 0.08);
+    --shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.7);
+    --fill: rgba(255, 255, 255, 0.08);
+    --bubble-in: rgba(255, 255, 255, 0.14);
+    --clock-gradient: linear-gradient(180deg, #ffffff, rgba(255, 255, 255, 0.66));
+  }
+}
+
+:root[data-theme='dark'] {
+  --wall: #0b0340;
+  --w1: #3a12c9;
+  --w2: #8c0b6f;
+  --w3: #1a067f;
+  --text: #ffffff;
+  --text2: rgba(255, 255, 255, 0.66);
+  --text3: rgba(255, 255, 255, 0.42);
+  --glass-rgb: 40, 26, 105;
+  --glass-min: 0.18;
+  --glass-max: 0.78;
+  --hair: rgba(255, 255, 255, 0.28);
+  --edge: rgba(255, 255, 255, 0.08);
+  --shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.7);
+  --fill: rgba(255, 255, 255, 0.08);
+  --bubble-in: rgba(255, 255, 255, 0.14);
+  --clock-gradient: linear-gradient(180deg, #ffffff, rgba(255, 255, 255, 0.66));
+}
+
+/* Expose the tokens to Tailwind utilities (text-fg-muted, bg-fill, font-mono, ...) */
+@theme inline {
+  --font-sans: var(--font);
+  --font-mono: var(--mono);
+  --color-fg: var(--text);
+  --color-fg-muted: var(--text2);
+  --color-fg-subtle: var(--text3);
+  --color-fill: var(--fill);
+  --color-edge: var(--edge);
+  --color-accent: var(--blue);
+  --color-success: var(--green);
+  --color-brand-pink: var(--pink);
+  --ease-spring: var(--spring);
+  --ease-smooth: var(--ease);
+}

@@ -1,0 +1,162 @@
+@layer components {
+  .island {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 10px);
+    left: 50%;
+    z-index: 80;
+    width: 136px;
+    height: 38px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 24px;
+    background: #000;
+    color: #fff;
+    cursor: pointer;
+    transform: translateX(-50%);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+    transition:
+      width 0.55s var(--spring),
+      height 0.55s var(--spring),
+      border-radius 0.55s var(--spring);
+  }
+
+  .island__idle,
+  .island__live {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    transition:
+      opacity 0.3s,
+      transform 0.45s var(--spring);
+  }
+
+  /* idle: avatar on the left, "live" waveform on the right */
+  .island__idle {
+    justify-content: space-between;
+    padding: 0 12px 0 5px;
+  }
+
+  .island__avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .island__wave {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 14px;
+  }
+
+  .island__wave-bar {
+    width: 3px;
+    border-radius: 2px;
+    background: var(--green);
+    animation: island-wave 1s ease-in-out infinite;
+  }
+
+  .island__wave-bar:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .island__wave-bar:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  .island__wave-bar:nth-child(4) {
+    animation-delay: 0.45s;
+  }
+
+  @keyframes island-wave {
+    0%,
+    100% {
+      height: 4px;
+    }
+    50% {
+      height: 14px;
+    }
+  }
+
+  /* expanded notification */
+  .island__live {
+    gap: 14px;
+    padding: 0 18px 0 14px;
+    text-align: left;
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  .island__icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1c1c1e;
+    font-size: 20px;
+  }
+
+  .island__icon img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .island__title {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .island__subtitle {
+    display: block;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 13px;
+  }
+
+  .island--open {
+    width: min(372px, calc(100vw - 20px));
+    height: 76px;
+    border-radius: 38px;
+  }
+
+  .island--open .island__idle {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+
+  .island--open .island__live {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* phones: the island only appears while it has something to say */
+  @media (max-width: 520px) {
+    .island {
+      transition:
+        width 0.55s var(--spring),
+        height 0.55s var(--spring),
+        opacity 0.3s,
+        transform 0.4s var(--spring);
+    }
+
+    .island:not(.island--open) {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) scale(0.6);
+    }
+  }
+
+  @media (max-height: 480px) and (orientation: landscape) {
+    .island:not(.island--open) {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+}

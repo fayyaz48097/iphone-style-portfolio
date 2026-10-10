@@ -1,0 +1,24 @@
+@layer components {
+  .action-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.3rem;
+    border: 0;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.35s var(--spring);
+  }
+
+  .action-button:active {
+    transform: scale(0.92);
+  }
+
+  .action-button--primary {
+    background: var(--btn);
+    color: #fff;
+    box-shadow: 0 12px 30px -12px var(--blue);
+  }
+}

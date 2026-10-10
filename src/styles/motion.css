@@ -1,0 +1,70 @@
+@layer components {
+  /* scroll reveal, toggled by <Reveal> */
+  .reveal {
+    opacity: 0;
+    transform: translateY(34px) scale(0.98);
+    transition:
+      opacity 0.9s var(--ease),
+      transform 0.9s var(--spring);
+    transition-delay: var(--reveal-delay, 0s);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* circular reveal used when switching theme through the View Transitions API */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-new(root) {
+    animation: theme-reveal 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes theme-reveal {
+    from {
+      clip-path: circle(0 at var(--vx, 50%) var(--vy, 50%));
+    }
+    to {
+      clip-path: circle(150% at var(--vx, 50%) var(--vy, 50%));
+    }
+  }
+}
+
+/* tab hidden: freeze every running animation */
+.is-paused * {
+  animation-play-state: paused !important;
+}
+
+/* motion switched off in the Control Centre */
+html.motion-off *,
+html.motion-off *::before,
+html.motion-off *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+html.motion-off .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
