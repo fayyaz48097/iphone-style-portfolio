@@ -1,0 +1,95 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "admins": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "presence": {
+      "admin": {
+        ".read": true,
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        ".validate": "newData.hasChildren(['state', 'status', 'updatedAt'])",
+        "state": { ".validate": "newData.val() === 'online' || newData.val() === 'away' || newData.val() === 'offline'" },
+        "status": { ".validate": "newData.val() === 'available' || newData.val() === 'busy' || newData.val() === 'away'" },
+        "lastActiveAt": { ".validate": "newData.isNumber()" },
+        "updatedAt": { ".validate": "newData.val() === now" },
+        "$other": { ".validate": false }
+      },
+      "visitors": {
+        ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+        "$chatId": {
+          ".read": "auth != null && (auth.uid === $chatId || root.child('chats').child($chatId).child('members').child(auth.uid).exists())",
+          ".write": "auth != null && (auth.uid === $chatId || root.child('chats').child($chatId).child('members').child(auth.uid).exists() || (root.child('admins').child(auth.uid).val() === true && !newData.exists()))",
+          ".validate": "newData.hasChildren(['online', 'lastSeenAt'])",
+          "online": { ".validate": "newData.isBoolean()" },
+          "lastSeenAt": { ".validate": "newData.val() === now" },
+          "$other": { ".validate": false }
+        }
+      }
+    },
+
+    "chatKeys": {
+      "$chatId": {
+        ".read": "auth != null && (auth.uid === $chatId || root.child('admins').child(auth.uid).val() === true)",
+        ".write": "auth != null && ((auth.uid === $chatId && !data.exists()) || (root.child('admins').child(auth.uid).val() === true && !newData.exists()))",
+        ".validate": "newData.isString() && newData.val().length >= 24 && newData.val().length <= 64"
+      }
+    },
+
+    "chats": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+
+      "$chatId": {
+        ".read": "auth != null && (auth.uid === $chatId || root.child('chats').child($chatId).child('members').child(auth.uid).exists())",
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true && !newData.exists()",
+
+        "members": {
+          "$memberUid": {
+            ".write": "auth != null && auth.uid === $memberUid && !data.exists()",
+            ".validate": "newData.isString() && newData.val() === root.child('chatKeys').child($chatId).val()"
+          }
+        },
+
+        "meta": {
+          ".write": "auth != null && (auth.uid === $chatId || root.child('chats').child($chatId).child('members').child(auth.uid).exists() || root.child('admins').child(auth.uid).val() === true)",
+          "createdAt": { ".validate": "newData.isNumber()" },
+          "updatedAt": { ".validate": "newData.val() === now" },
+          "email": { ".validate": "newData.isString() && newData.val().length <= 120 && newData.val().matches(/^[^@ ]+@[^@ ]+\\.[^@ ]+$/)" },
+          "name": { ".validate": "newData.isString() && newData.val().length <= 60" },
+          "lastMessage": {
+            ".validate": "newData.hasChildren(['text', 'from', 'at'])",
+            "text": { ".validate": "newData.isString() && newData.val().length <= 140" },
+            "from": { ".validate": "newData.val() === 'visitor' || newData.val() === 'admin'" },
+            "at": { ".validate": "newData.val() === now" },
+            "$other": { ".validate": false }
+          },
+          "lastVisitorAt": { ".validate": "newData.val() === now" },
+          "unreadForAdmin": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "unreadForVisitor": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "lastNotifiedAt": { ".validate": "newData.val() === now && (!data.exists() || now - data.val() >= 300000)" },
+          "lastEmailedAt": { ".validate": "newData.val() === now && root.child('admins').child(auth.uid).val() === true" },
+          "$other": { ".validate": false }
+        },
+
+        "messages": {
+          "$messageId": {
+            ".write": "auth != null && !data.exists() && (auth.uid === $chatId || root.child('chats').child($chatId).child('members').child(auth.uid).exists() || root.child('admins').child(auth.uid).val() === true)",
+            ".validate": "newData.hasChildren(['from', 'text', 'at', 'uid'])",
+            "from": {
+              ".validate": "(newData.val() === 'admin' && root.child('admins').child(auth.uid).val() === true) || (newData.val() === 'visitor' && (auth.uid === $chatId || root.child('chats').child($chatId).child('members').child(auth.uid).exists()) && (!root.child('chats').child($chatId).child('meta/lastVisitorAt').exists() || now - root.child('chats').child($chatId).child('meta/lastVisitorAt').val() >= 1000))"
+            },
+            "text": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 1000" },
+            "at": { ".validate": "newData.val() === now" },
+            "uid": { ".validate": "newData.val() === auth.uid" },
+            "$other": { ".validate": false }
+          }
+        }
+      }
+    }
+  }
+}

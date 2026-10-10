@@ -1,0 +1,640 @@
+/* Admin: iMessage for Mac, in the portfolio's Liquid Glass style */
+@layer components {
+  .admin-page {
+    display: grid;
+    place-items: center;
+    min-height: 100svh;
+    padding: 24px 16px;
+  }
+
+  .admin-error {
+    margin: 0.5rem 0 0;
+    color: #ff453a;
+    font-size: 0.85rem;
+  }
+
+  /* ---------- gate cards ---------- */
+
+  .admin-card {
+    width: min(440px, 100%);
+    padding: 28px;
+    border-radius: 28px;
+    text-align: center;
+  }
+
+  .admin-card h1 {
+    margin: 0 0 0.5rem;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .admin-card p {
+    margin: 0 0 1rem;
+    color: var(--text2);
+  }
+
+  .admin-card code {
+    padding: 0.1rem 0.35rem;
+    border-radius: 6px;
+    background: var(--fill);
+    font-family: var(--mono);
+    font-size: 0.85em;
+  }
+
+  .admin-card__button {
+    padding: 0.8rem 1.4rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--btn);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .admin-card__secondary {
+    border: 0;
+    background: none;
+    color: var(--blue);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .admin-card__uid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.7rem;
+    border: 1px dashed var(--edge);
+    border-radius: 14px;
+    background: var(--fill);
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    word-break: break-all;
+    cursor: pointer;
+  }
+
+  .admin-card__uid small {
+    color: var(--text2);
+    font-family: var(--font);
+  }
+
+  /* ---------- window ---------- */
+
+  .admin-window {
+    display: flex;
+    flex-direction: column;
+    width: min(1100px, 100%);
+    height: min(760px, calc(100svh - 48px));
+    overflow: hidden;
+    border-radius: 22px;
+    background: rgba(var(--glass-rgb), 0.78);
+    -webkit-backdrop-filter: blur(30px) saturate(1.8);
+    backdrop-filter: blur(30px) saturate(1.8);
+    box-shadow:
+      inset 0 1px 0 var(--hair),
+      inset 0 0 0 1px var(--edge),
+      0 40px 100px -40px rgba(20, 8, 47, 0.6);
+  }
+
+  .admin-window__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--edge);
+  }
+
+  .admin-window__lights {
+    display: flex;
+    gap: 7px;
+  }
+
+  .admin-window__lights i {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ff5f57;
+  }
+
+  .admin-window__lights i:nth-child(2) {
+    background: #febc2e;
+  }
+
+  .admin-window__lights i:nth-child(3) {
+    background: #28c840;
+  }
+
+  .admin-window__title {
+    margin-right: auto;
+    font-size: 0.95rem;
+  }
+
+  .admin-window__state {
+    color: var(--text2);
+    font-size: 0.78rem;
+  }
+
+  .admin-window__state--online::before {
+    content: '● ';
+    color: var(--green);
+  }
+
+  .admin-window__link {
+    border: 0;
+    background: none;
+    color: var(--blue);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* segmented control */
+  .admin-status {
+    display: inline-flex;
+    padding: 3px;
+    border-radius: 10px;
+    background: var(--fill);
+  }
+
+  .admin-status__option {
+    padding: 0.3rem 0.75rem;
+    border: 0;
+    border-radius: 8px;
+    background: none;
+    color: var(--text2);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background 0.25s,
+      color 0.25s;
+  }
+
+  .admin-status__option.is-active {
+    background: rgba(var(--glass-rgb), 0.95);
+    color: var(--text);
+    box-shadow: 0 1px 4px rgba(20, 8, 47, 0.18);
+  }
+
+  .admin-status__option--available.is-active::before {
+    content: '● ';
+    color: var(--green);
+  }
+
+  .admin-status__option--busy.is-active::before {
+    content: '● ';
+    color: #ffd60a;
+  }
+
+  .admin-window__body {
+    display: grid;
+    flex: 1;
+    grid-template-columns: 320px 1fr;
+    min-height: 0;
+  }
+
+  .admin-window__sidebar {
+    min-height: 0;
+    overflow-y: auto;
+    border-right: 1px solid var(--edge);
+  }
+
+  .admin-window__main {
+    display: flex;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .admin-placeholder {
+    margin: auto;
+    color: var(--text2);
+    text-align: center;
+  }
+
+  .admin-placeholder p {
+    margin: 0 0 0.25rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  /* ---------- conversation list ---------- */
+
+  .admin-list {
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+  }
+
+  .admin-list__empty {
+    padding: 24px;
+    color: var(--text2);
+    text-align: center;
+  }
+
+  .admin-list__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+    border: 0;
+    border-radius: 12px;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .admin-list__item:hover {
+    background: var(--fill);
+  }
+
+  .admin-list__item--active,
+  .admin-list__item--active:hover {
+    background: var(--btn);
+    color: #fff;
+  }
+
+  .admin-list__avatar {
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5b2bff, #ff4fd8);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .admin-list__online {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 11px;
+    height: 11px;
+    border: 2px solid var(--wall);
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .admin-list__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .admin-list__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .admin-list__name {
+    overflow: hidden;
+    font-size: 0.9rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .admin-list__time {
+    flex: none;
+    font-size: 0.75rem;
+    opacity: 0.7;
+  }
+
+  .admin-list__preview {
+    display: block;
+    overflow: hidden;
+    font-size: 0.82rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 0.7;
+  }
+
+  .admin-list__preview--unread {
+    font-weight: 700;
+    opacity: 1;
+  }
+
+  .admin-list__badge {
+    display: grid;
+    flex: none;
+    place-items: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--blue);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .admin-list__item--active .admin-list__badge {
+    background: #fff;
+    color: var(--btn);
+  }
+
+  /* ---------- thread ---------- */
+
+  .admin-thread {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .admin-thread__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--edge);
+  }
+
+  .admin-thread__back {
+    display: none;
+    border: 0;
+    background: none;
+    color: var(--blue);
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .admin-thread__who {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .admin-thread__who b {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .admin-thread__who small {
+    color: var(--text2);
+    font-size: 0.78rem;
+  }
+
+  .admin-thread__online {
+    color: var(--green) !important;
+  }
+
+  .admin-thread__delete {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.8rem;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 69, 58, 0.12);
+    color: #ff453a;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      transform 0.3s var(--spring);
+  }
+
+  .admin-thread__delete:hover {
+    background: rgba(255, 69, 58, 0.2);
+  }
+
+  .admin-thread__delete:active {
+    transform: scale(0.94);
+  }
+
+  .admin-thread__delete svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ---------- confirmation dialog (iOS alert) ---------- */
+
+  .admin-dialog {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: rgba(8, 2, 40, 0.35);
+    animation: admin-fade 0.2s var(--ease) both;
+  }
+
+  .admin-dialog__panel {
+    width: min(320px, 100%);
+    overflow: hidden;
+    border-radius: 18px;
+    text-align: center;
+    animation: admin-alert-in 0.35s var(--spring) both;
+  }
+
+  .admin-dialog__title {
+    margin: 0;
+    padding: 18px 18px 4px;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .admin-dialog__message {
+    margin: 0;
+    padding: 0 18px 16px;
+    color: var(--text2);
+    font-size: 0.86rem;
+    line-height: 1.4;
+  }
+
+  .admin-dialog__message .admin-error {
+    display: block;
+  }
+
+  .admin-dialog__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--edge);
+  }
+
+  .admin-dialog__button {
+    padding: 12px;
+    border: 0;
+    background: none;
+    color: var(--blue);
+    font-size: 0.98rem;
+    cursor: pointer;
+  }
+
+  .admin-dialog__button + .admin-dialog__button {
+    border-left: 1px solid var(--edge);
+  }
+
+  .admin-dialog__button:hover {
+    background: var(--fill);
+  }
+
+  .admin-dialog__button--destructive {
+    color: #ff453a;
+    font-weight: 700;
+  }
+
+  .admin-dialog__button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  @keyframes admin-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes admin-alert-in {
+    from {
+      opacity: 0;
+      transform: scale(1.12);
+    }
+  }
+
+  .admin-thread__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 0;
+    padding: 16px;
+    overflow-y: auto;
+  }
+
+  .admin-bubble {
+    display: flex;
+    flex-direction: column;
+    max-width: 72%;
+    padding: 8px 12px;
+    border-radius: 18px;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    animation: chat-pop 0.35s var(--spring) both;
+  }
+
+  .admin-bubble time {
+    margin-top: 2px;
+    font-size: 0.68rem;
+    opacity: 0.65;
+  }
+
+  .admin-bubble--theirs {
+    align-self: flex-start;
+    border-bottom-left-radius: 6px;
+    background: var(--bubble-in);
+  }
+
+  .admin-bubble--mine {
+    align-self: flex-end;
+    border-bottom-right-radius: 6px;
+    background: var(--btn);
+    color: #fff;
+  }
+
+  .admin-thread__delivery {
+    margin: 0;
+    padding: 0 16px 6px;
+    color: var(--text2);
+    font-size: 0.78rem;
+    text-align: right;
+  }
+
+  .admin-composer {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 10px 14px 14px;
+    border-top: 1px solid var(--edge);
+  }
+
+  .admin-composer__input {
+    flex: 1;
+    min-width: 0;
+    max-height: 140px;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--edge);
+    border-radius: 20px;
+    outline: 0;
+    background: var(--fill);
+    color: var(--text);
+    font: inherit;
+    resize: none;
+    field-sizing: content;
+  }
+
+  .admin-composer__input:focus {
+    border-color: var(--blue);
+  }
+
+  .admin-composer__send {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .admin-composer__send svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .admin-composer__send:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  /* ---------- phones: list or thread, one at a time ---------- */
+
+  @media (max-width: 760px) {
+    .admin-page {
+      padding: 0;
+    }
+
+    .admin-window {
+      height: 100svh;
+      border-radius: 0;
+    }
+
+    .admin-window__body {
+      grid-template-columns: 1fr;
+    }
+
+    .admin-window__sidebar {
+      border-right: 0;
+    }
+
+    .admin-window--thread-open .admin-window__sidebar,
+    .admin-window:not(.admin-window--thread-open) .admin-window__main {
+      display: none;
+    }
+
+    .admin-thread__back {
+      display: block;
+    }
+
+    .admin-bubble {
+      max-width: 85%;
+    }
+  }
+}

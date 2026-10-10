@@ -1,4 +1,5 @@
 import { FirebaseConfigError, getFirebaseApp, missingFirebaseKeys } from './app'
+import { EMULATOR_HOSTS, useEmulators } from './emulators'
 
 /*
  * Realtime Database access. Every helper takes a slash path ("visitors/count")
@@ -7,18 +8,63 @@ import { FirebaseConfigError, getFirebaseApp, missingFirebaseKeys } from './app'
 
 let dbPromise = null
 
-/** @returns {Promise<{ db: import('firebase/database').Database, sdk: typeof import('firebase/database') }>} */
-async function getDatabaseHandle() {
+/**
+ * The database plus its SDK functions, for services that need more than the helpers below.
+ * @returns {Promise<{ db: import('firebase/database').Database, sdk: typeof import('firebase/database') }>}
+ */
+export async function getDatabaseHandle() {
   if (!dbPromise) {
     const missing = missingFirebaseKeys(['apiKey', 'projectId', 'appId', 'databaseURL'])
     if (missing.length) throw new FirebaseConfigError(missing)
 
-    dbPromise = Promise.all([getFirebaseApp(), import('firebase/database')]).then(([app, sdk]) => ({
-      db: sdk.getDatabase(app),
-      sdk,
-    }))
+    dbPromise = Promise.all([getFirebaseApp(), import('firebase/database')]).then(([app, sdk]) => {
+      const db = sdk.getDatabase(app)
+      if (useEmulators) sdk.connectDatabaseEmulator(db, EMULATOR_HOSTS.database.host, EMULATOR_HOSTS.database.port)
+      return { db, sdk }
+    })
   }
   return dbPromise
+}
+
+/**
+ * Opens or closes the realtime connection. The Spark plan allows 100 simultaneous
+ * connections, so features connect only while they are in use.
+ */
+export async function setConnected(connected) {
+  const { db, sdk } = await getDatabaseHandle()
+  if (connected) sdk.goOnline(db)
+  else sdk.goOffline(db)
+}
+
+/** A new time-ordered push key for `path`, without writing anything. */
+export async function newKey(path) {
+  const { db, sdk } = await getDatabaseHandle()
+  return sdk.push(sdk.ref(db, path)).key
+}
+
+/**
+ * Server-side values to use inside writes: the server's clock and atomic increments.
+ * @returns {Promise<{ now: object, increment: (delta: number) => object }>}
+ */
+export async function sentinels() {
+  const { sdk } = await getDatabaseHandle()
+  return { now: sdk.serverTimestamp(), increment: sdk.increment }
+}
+
+/**
+ * Writes `value` at `path` now, and tells the server to write `onDisconnectValue`
+ * when this client disconnects (tab closed, network lost). The basis of presence.
+ */
+export async function setWithDisconnect(path, value, onDisconnectValue) {
+  const { db, sdk } = await getDatabaseHandle()
+  const target = sdk.ref(db, path)
+  await sdk.onDisconnect(target).set(onDisconnectValue)
+  await sdk.set(target, value)
+}
+
+/** Live "am I connected to the database" flag. Returns unsubscribe. */
+export function onConnectionChange(callback) {
+  return subscribe('.info/connected', (connected) => callback(connected === true))
 }
 
 /** Reads a value once. Resolves to `null` when nothing is stored at `path`. */

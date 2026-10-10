@@ -162,6 +162,19 @@
     animation-play-state: paused;
   }
 
+  /* loader: the orb thinking, centred in whatever holds it */
+  .siri-loader {
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    animation: siri-pop 0.4s var(--spring) both;
+  }
+
+  /* full-page loading: a larger orb */
+  .siri-loader--page .siri-orb {
+    --orb-size: 88px;
+  }
+
   /* ================= SCREEN-EDGE GLOW ================= */
 
   .siri-glow {

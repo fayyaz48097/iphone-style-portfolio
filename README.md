@@ -92,6 +92,26 @@ const { data, loading, error } = useRealtimeValue('stats/views') // live in Reac
   - restricting the API key to your domains in Google Cloud console › Credentials,
   - optionally, App Check.
 
+## Live chat
+
+Visitors chat from the contact section, and Fayyaz answers from `/admin`. The chat runs on the Firebase Spark (free) plan plus Vercel Hobby (free) functions, with Gmail for email.
+
+- **Visitors** get a silent anonymous Firebase account. The same browser keeps the same conversation. An optional email is requested when Fayyaz is away or hasn't answered within 2 minutes.
+- **`/admin`** uses Google sign-in, and only uids listed under `admins/` get in. It has an Available / Busy / Away switch, sets you to away automatically after 5 idle minutes or when the tab is hidden, and shows unread badges and browser alerts.
+- **`api/chat/notify`** emails Fayyaz about new messages: at most one per conversation every 5 minutes, and none while he's online.
+- **`api/chat/reply`** emails the visitor the reply when they're offline. The email contains a *Continue the chat* link that reopens the conversation on any device.
+- **Security** comes from `database.rules.json`, which the functions also go through: they call the database with the caller's own token, so no service account is needed.
+
+Server-only env vars (`MAIL_*`, `CHAT_NOTIFY_TO`, `SITE_URL`) have no `VITE_` prefix, so they never reach the browser. `npm run dev` and `npm run preview` serve `/api` locally through `scripts/vite-local-api.mjs`.
+
+**Testing locally against the emulators** (needs Java 11+):
+
+```bash
+npm run emulators   # auth + database emulators with database.rules.json
+```
+
+Then build or run the app with `VITE_FIREBASE_EMULATORS=true`, and give the API these server variables: `FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099`, `FIREBASE_DATABASE_EMULATOR_HOST=127.0.0.1:9000` and `FIREBASE_PROJECT_ID=demo-portfolio`.
+
 ## Icons
 
 `npm run icons` crops the face from `public/fayyaz_avatar.jpg` (local source artwork, git-ignored) into the favicon, the Apple touch icon and the web-app manifest icons in `public/icons/`.

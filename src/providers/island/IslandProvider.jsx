@@ -16,9 +16,10 @@ export function IslandProvider({ children }) {
   const { schedule, cancel } = useTimers()
   const closeTimer = useRef(0)
 
+  /** `onTap` makes the expanded island actionable (e.g. "New message" -> open the chat). */
   const notify = useCallback(
-    ({ icon = null, title, subtitle = '', duration = NOTIFY_DURATION.default }) => {
-      setState({ open: true, icon, title, subtitle })
+    ({ icon = null, title, subtitle = '', duration = NOTIFY_DURATION.default, onTap = null }) => {
+      setState({ open: true, icon, title, subtitle, onTap })
       cancel(closeTimer.current)
       closeTimer.current = schedule(() => setState((current) => ({ ...current, open: false })), duration)
     },

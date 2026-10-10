@@ -34,7 +34,199 @@
     flex-direction: column;
     gap: 6px;
     min-height: 280px;
+    max-height: min(520px, 60svh);
     padding: 18px 16px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* ---------- live status ---------- */
+
+  .chat__avatar-wrap {
+    position: relative;
+    display: block;
+  }
+
+  .chat__presence-dot {
+    position: absolute;
+    right: 1px;
+    bottom: 2px;
+    width: 14px;
+    height: 14px;
+    border: 2.5px solid var(--wall);
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .chat__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--text2);
+    font-size: 0.78rem;
+  }
+
+  .chat__status--online {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  .chat__status--busy::before,
+  .chat__status--away::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ffd60a;
+  }
+
+  .chat__status--away::before {
+    background: var(--text3);
+  }
+
+  .chat__hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--edge);
+    color: var(--text2);
+    font-size: 0.85rem;
+    text-align: center;
+    animation: chat-pop 0.45s var(--spring) both;
+  }
+
+  .chat__hint p {
+    max-width: 44ch;
+    margin: 0;
+  }
+
+  .chat__receipt {
+    align-self: flex-end;
+    margin: -2px 6px 2px 0;
+    color: var(--text3);
+    font-size: 0.72rem;
+    font-weight: 500;
+  }
+
+  /* system note between messages, like iMessage's centred notices */
+  .chat-note {
+    align-self: center;
+    max-width: 90%;
+    margin: 6px 0 2px;
+    padding: 6px 12px;
+    border-radius: 12px;
+    background: var(--fill);
+    color: var(--text2);
+    font-size: 0.82rem;
+    text-align: center;
+    animation: chat-pop 0.45s var(--spring) both;
+  }
+
+  /* ---------- email capture ---------- */
+
+  .email-capture__toggle {
+    padding: 0.35rem 0.85rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--fill);
+    color: var(--blue);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .email-capture {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    width: min(100%, 360px);
+  }
+
+  .email-capture--card {
+    align-self: center;
+    margin-top: 4px;
+    padding: 12px;
+    border-radius: 18px;
+    background: var(--bubble-in);
+    animation: chat-pop 0.45s var(--spring) both;
+  }
+
+  .email-capture__prompt {
+    color: var(--text);
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .email-capture__row {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .email-capture__input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--edge);
+    border-radius: 999px;
+    outline: 0;
+    background: var(--fill);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.88rem;
+  }
+
+  .email-capture__input:focus {
+    border-color: var(--blue);
+  }
+
+  .email-capture__input[aria-invalid='true'] {
+    border-color: #ff453a;
+  }
+
+  .email-capture__save {
+    padding: 0 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--btn);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .email-capture__save:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  .email-capture__error {
+    color: #ff453a;
+    font-size: 0.78rem;
+    text-align: left;
+  }
+
+  .email-capture__saved {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0;
+    color: var(--text2);
+    font-size: 0.82rem;
+  }
+
+  .email-capture__saved--card {
+    align-self: center;
+    animation: chat-pop 0.45s var(--spring) both;
+  }
+
+  .email-capture__check {
+    width: 15px;
+    height: 15px;
+    color: var(--green);
   }
 
   .chat__stamp {

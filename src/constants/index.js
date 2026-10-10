@@ -3,6 +3,7 @@ export const STORAGE_KEYS = Object.freeze({
   theme: 'fa:theme',
   tint: 'fa:tint',
   motion: 'fa:motion',
+  chat: 'fa:chat',
 })
 
 export const MEDIA_QUERIES = Object.freeze({

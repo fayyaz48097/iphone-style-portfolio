@@ -5,5 +5,21 @@
  * Every SDK is loaded on demand, so pages that never touch Firebase never download it.
  */
 export { FirebaseConfigError, getFirebaseApp, isFirebaseConfigured } from './app'
-export { increment, pushChild, readOnce, remove, serverTimestamp, subscribe, update, write } from './database'
+export {
+  getDatabaseHandle,
+  increment,
+  newKey,
+  onConnectionChange,
+  pushChild,
+  readOnce,
+  remove,
+  sentinels,
+  serverTimestamp,
+  setConnected,
+  setWithDisconnect,
+  subscribe,
+  update,
+  write,
+} from './database'
+export { ensureAnonymousUser, getIdToken, onUserChanged, signInWithGoogle, signOutUser } from './auth'
 export { initAnalytics, trackEvent } from './analytics'
