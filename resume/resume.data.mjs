@@ -1,9 +1,13 @@
 /**
  * Résumé content. Edit this file, then run `npm run resume` to rebuild the PDFs.
  *
- * References are private (third-party phone numbers), so they live in
- * `references.local.json` (git-ignored) and only go into the private PDF.
+ * References (third-party phone numbers) live in `references.local.json` (git-ignored).
+ * They always go into the private PDF, and into the public PDF on the website only
+ * when `showReferencesPublicly` is true.
  */
+
+/** true: the downloadable CV lists references; false: it says "Available upon request". */
+export const showReferencesPublicly = true
 
 export const resume = {
   name: 'Fayyaz Ali',

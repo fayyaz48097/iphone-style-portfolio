@@ -25,13 +25,13 @@ const entryHeader = (title, date) => `
   </div>`
 
 const STYLES = `
-  @page { size: Letter; margin: 0.45in 0.55in; }
+  @page { size: Letter; margin: 0.42in 0.55in; }
   * { box-sizing: border-box; }
   html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body {
     margin: 0;
     color: #333;
-    font: 10pt/1.28 Calibri, Carlito, 'Segoe UI', Arial, sans-serif;
+    font: 10pt/1.25 Calibri, Carlito, 'Segoe UI', Arial, sans-serif;
   }
   a { color: #1f3a6e; }
   a.plain { color: inherit; text-decoration: none; }
@@ -40,7 +40,7 @@ const STYLES = `
   .title { margin-top: 2pt; color: #555; font-size: 12pt; }
   .contact { margin-top: 3pt; color: #555; font-size: 9.6pt; }
   .contact .sep { margin: 0 5pt; }
-  section { margin-bottom: 9pt; }
+  section { margin-bottom: 8pt; }
   h2 {
     margin: 0 0 6pt;
     padding-bottom: 2pt;

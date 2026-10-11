@@ -4,7 +4,7 @@
  *   npm run resume
  *
  * Outputs
- *   public/resume/Fayyaz_Ali_Backend_Resume.pdf   public download (references "on request")
+ *   public/resume/Fayyaz_Ali_Backend_Resume.pdf   public download (references when showReferencesPublicly is on)
  *   public/resume/resume-preview.jpg              first-page thumbnail for the site
  *   src/data/resume.meta.json                     page count, size, build date for the UI
  *   resume/output/..._with_references.pdf         private copy (git-ignored), only if
@@ -17,7 +17,7 @@ import { mkdir, readFile, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright-core'
-import { resume } from '../resume/resume.data.mjs'
+import { resume, showReferencesPublicly } from '../resume/resume.data.mjs'
 import { renderResume } from '../resume/template.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -44,9 +44,11 @@ async function main() {
   const page = await browser.newPage()
 
   try {
-    // public version
+    const references = existsSync(referencesFile) ? JSON.parse(await readFile(referencesFile, 'utf8')) : null
+
+    // public version (references only when showReferencesPublicly is on)
     const publicPdf = path.join(publicDir, `${FILE_NAME}.pdf`)
-    const html = renderResume(resume)
+    const html = renderResume(resume, { references: showReferencesPublicly ? references : null })
     const pages = await renderPdf(page, html, publicPdf)
     const { size } = await stat(publicPdf)
 
@@ -67,9 +69,8 @@ async function main() {
     console.log(`✓ public résumé: ${path.relative(root, publicPdf)} (${pages} pages, ${(size / 1024).toFixed(0)} KB)`)
 
     // private version with references
-    if (existsSync(referencesFile)) {
+    if (references) {
       await mkdir(privateDir, { recursive: true })
-      const references = JSON.parse(await readFile(referencesFile, 'utf8'))
       const privatePdf = path.join(privateDir, `${FILE_NAME}_with_references.pdf`)
       await renderPdf(page, renderResume(resume, { references }), privatePdf)
       console.log(`✓ private résumé: ${path.relative(root, privatePdf)}`)
