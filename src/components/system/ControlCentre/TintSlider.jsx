@@ -14,7 +14,7 @@ export function TintSlider({ value, onChange, ref }) {
   const labelId = useId()
 
   return (
-    <div className={cn(glass(), 'cc-slider')}>
+    <div className={cn(glass({ float: true }), 'cc-slider')}>
       <div className="cc-slider__header">
         <b id={labelId} className="cc-slider__title">
           Liquid Glass

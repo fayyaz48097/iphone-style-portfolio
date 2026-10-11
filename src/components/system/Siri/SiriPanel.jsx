@@ -46,7 +46,7 @@ export function SiriPanel({ id, visible, status, siri, speech, inputRef, footnot
   return (
     <section
       id={id}
-      className={cn(glass(), 'siri-panel')}
+      className={cn(glass({ float: true }), 'siri-panel')}
       role="dialog"
       aria-label="Siri"
       aria-hidden={!visible}

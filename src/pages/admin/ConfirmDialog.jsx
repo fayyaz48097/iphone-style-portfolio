@@ -45,7 +45,7 @@ export function ConfirmDialog({ open, title, message, confirmLabel, busy = false
         if (event.target === event.currentTarget && !busy) onCancel()
       }}
     >
-      <div className={cn(glass(), 'admin-dialog__panel')}>
+      <div className={cn(glass({ float: true }), 'admin-dialog__panel')}>
         <h2 id={titleId} className="admin-dialog__title">
           {title}
         </h2>

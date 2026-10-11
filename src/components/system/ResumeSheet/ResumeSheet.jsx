@@ -63,7 +63,7 @@ export function ResumeSheet() {
         if (event.target === event.currentTarget) close()
       }}
     >
-      <div className={cn(glass(), 'resume-sheet__panel')}>
+      <div className={cn(glass({ float: true }), 'resume-sheet__panel')}>
         <span className="resume-sheet__grabber" aria-hidden="true" />
 
         <header className="resume-sheet__header">

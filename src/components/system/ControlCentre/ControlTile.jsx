@@ -13,7 +13,7 @@ export function ControlTile({ shape = 'round', active = false, toggle = false, t
   return (
     <button
       type="button"
-      className={cn(glass(), 'cc-tile', `cc-tile--${shape}`, active && 'cc-tile--active', className)}
+      className={cn(glass({ float: true }), 'cc-tile', `cc-tile--${shape}`, active && 'cc-tile--active', className)}
       aria-pressed={toggle ? active : undefined}
       {...props}
     >

@@ -164,12 +164,21 @@
       pointer-events: none;
       transform: translateX(-50%) scale(0.6);
     }
+
+    /* invisible, so don't keep animating it */
+    .island:not(.island--open) .island__wave-bar {
+      animation-play-state: paused;
+    }
   }
 
   @media (max-height: 480px) and (orientation: landscape) {
     .island:not(.island--open) {
       opacity: 0;
       pointer-events: none;
+    }
+
+    .island:not(.island--open) .island__wave-bar {
+      animation-play-state: paused;
     }
   }
 }

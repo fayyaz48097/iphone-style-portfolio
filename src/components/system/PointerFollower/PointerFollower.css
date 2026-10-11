@@ -13,8 +13,8 @@
     background: rgba(120, 120, 128, 0.45);
     /* parked off-screen until the first pointer move */
     transform: translate(-100px, -100px);
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
+    /* no backdrop blur: it would re-render on every mouse move for an invisible 2px effect */
+    will-change: transform;
     transition:
       width 0.3s var(--spring),
       height 0.3s var(--spring),

@@ -21,7 +21,7 @@ function ProgressRing() {
  */
 export function LockWidget({ widget }) {
   const { open } = useOverlayActions()
-  const base = cn(glass({ lens: true }), 'lock-widget')
+  const base = cn(glass(), 'lock-widget')
 
   switch (widget.type) {
     case 'link': {

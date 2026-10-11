@@ -1,14 +1,19 @@
 /*
  * Liquid Glass material.
  * Opacity and blur scale with --tint, which the Control Centre slider sets.
+ *
+ * Performance: a backdrop blur is re-rendered every frame for every surface while
+ * anything behind it moves (the wallpaper drifts constantly). So:
+ *  - .glass (cards in the page) sit on the already-blurred wallpaper and use a
+ *    slightly denser tint instead of a live blur: visually near-identical, far cheaper.
+ *  - .glass--float (tab bar, Siri, Control Centre, sheets) floats over changing
+ *    content and keeps the real blur.
  */
 @layer components {
   .glass {
     position: relative;
     isolation: isolate;
-    background: rgba(var(--glass-rgb), calc(var(--glass-min) + (var(--glass-max) - var(--glass-min)) * var(--tint)));
-    -webkit-backdrop-filter: blur(var(--blur, 19px)) saturate(1.9);
-    backdrop-filter: blur(var(--blur, 19px)) saturate(1.9);
+    background: rgba(var(--glass-rgb), calc(0.06 + var(--glass-min) + (var(--glass-max) - var(--glass-min)) * var(--tint)));
     box-shadow:
       inset 0 1px 0 0 var(--hair),
       inset 0 -1px 0 0 rgba(255, 255, 255, 0.08),
@@ -50,17 +55,27 @@
     background: radial-gradient(120% 70% at 20% 0%, rgba(255, 255, 255, calc(0.28 - 0.2 * var(--tint))), transparent 55%);
   }
 
+  /* floating glass: real frosted blur of whatever scrolls underneath */
+  .glass--float {
+    background: rgba(var(--glass-rgb), calc(var(--glass-min) + (var(--glass-max) - var(--glass-min)) * var(--tint)));
+    -webkit-backdrop-filter: blur(var(--blur, 19px)) saturate(1.9);
+    backdrop-filter: blur(var(--blur, 19px)) saturate(1.9);
+  }
+
   /*
-   * Glass inside glass (the home-screen dock, the Siri orb in the panel...) is already
-   * over a blurred surface: a second backdrop blur costs a full extra render pass for
-   * an invisible difference, so nested glass keeps its tint but skips the blur.
+   * Glass inside glass (the Siri orb in the panel, tiles in the Control Centre...) is
+   * already over a blurred surface: a second blur costs a full extra render pass for
+   * an invisible difference.
    */
-  .glass .glass {
+  .glass .glass--float {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
 
-  /* real refraction where the browser supports SVG backdrop filters (see LiquidFilter) */
+  /*
+   * Optional SVG refraction (see LiquidFilter). Off by default: it is the most expensive
+   * effect in the browser and can smear or flicker while scrolling in Chromium.
+   */
   html.has-refraction .glass--lens {
     -webkit-backdrop-filter: blur(var(--blur-lens, 11px)) saturate(1.9);
     backdrop-filter: url(#liquid) blur(var(--blur-lens, 11px)) saturate(1.9);

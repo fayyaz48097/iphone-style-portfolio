@@ -54,7 +54,7 @@ export function SiriOrb({ state = SIRI_STATUS.idle, size = 'md', className }) {
       <span className="siri-orb__ripple" />
       <span className="siri-orb__ripple siri-orb__ripple--late" />
       {/* the sphere itself is Liquid Glass, so it follows the theme and tint slider */}
-      <span className={cn(glass(), 'siri-orb__glass')} />
+      <span className={cn(glass({ float: true }), 'siri-orb__glass')} />
 
       <span className="siri-orb__body">
         {LAYERS.map((petals, index) => (

@@ -51,7 +51,7 @@ export function TabBar() {
 
   return (
     <div className={cn('tab-dock', compact && 'tab-dock--compact')}>
-      <nav ref={barRef} className={cn(glass({ lens: true }), 'tab-bar')} aria-label="Sections">
+      <nav ref={barRef} className={cn(glass({ float: true }), 'tab-bar')} aria-label="Sections">
         <span ref={indicatorRef} className="tab-bar__indicator" aria-hidden="true" />
         {tabs.map(({ id, label, Icon, hideOnMobile }) => (
           <a
@@ -76,7 +76,7 @@ export function TabBar() {
 
       <button
         type="button"
-        className={cn(glass({ lens: true }), 'control-centre-toggle')}
+        className={cn(glass({ float: true }), 'control-centre-toggle')}
         aria-label="Open control centre"
         aria-expanded={controlCentreOpen}
         onClick={() => toggle(OVERLAYS.controlCentre)}
