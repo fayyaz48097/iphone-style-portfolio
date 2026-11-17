@@ -170,6 +170,30 @@
         filter: blur(6px);
       }
     }
+
+    /*
+     * Touch devices: a scroll-linked blur re-rasterises the whole hero (portrait included)
+     * on every scroll frame. Opacity + transform alone run on the compositor.
+     */
+    @media (pointer: coarse) {
+      .lock-screen__content {
+        animation-name: lock-unlock-lite;
+      }
+
+      @keyframes lock-unlock-lite {
+        to {
+          opacity: 0.15;
+          transform: translateY(-12vh) scale(0.94);
+        }
+      }
+    }
+  }
+
+  /* touch devices: the letters rise in without a per-letter blur during first load */
+  @media (pointer: coarse) {
+    .lock-screen__char {
+      filter: none;
+    }
   }
 
   @media (max-width: 520px) {

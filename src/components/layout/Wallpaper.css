@@ -70,6 +70,18 @@
   }
 
   /*
+   * Touch devices (Android especially): a drifting blur means the GPU re-blurs three
+   * screen-sized layers, and the tab bar's backdrop blur, on every frame, which steals
+   * the frame budget from scrolling. Static blobs are blurred once and then free.
+   */
+  @media (pointer: coarse) {
+    .wallpaper__blob {
+      animation: none;
+      will-change: auto;
+    }
+  }
+
+  /*
    * Every glass surface re-blurs whatever moves behind it. While an overlay is open
    * the wallpaper is mostly covered, so its drift pauses and the overlay stays smooth.
    */

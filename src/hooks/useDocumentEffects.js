@@ -31,6 +31,8 @@ export function usePointerLightAngle() {
   useEventListener(
     'pointermove',
     (event) => {
+      // a finger has no hover position; restyling every glass surface mid-swipe only costs frames
+      if (event.pointerType === 'touch') return
       pointer.current = { x: event.clientX, y: event.clientY }
       if (!frame.current) frame.current = requestAnimationFrame(apply)
     },
