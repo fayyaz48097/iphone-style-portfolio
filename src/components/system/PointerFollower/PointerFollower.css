@@ -5,27 +5,30 @@
     top: 0;
     left: 0;
     z-index: 100;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
+    /*
+     * Drawn at its largest (hover) size and scaled down, so growing is a GPU-only `scale`
+     * change (no relayout) and the circle stays crisp at full size. JS moves it with the
+     * individual `translate` property, which applies after `scale`, so scaling never
+     * shifts the position.
+     */
+    width: 52px;
+    height: 52px;
+    margin: -26px 0 0 -26px;
     border-radius: 50%;
     pointer-events: none;
     background: rgba(120, 120, 128, 0.45);
     /* parked off-screen until the first pointer move */
-    transform: translate(-100px, -100px);
+    translate: -100px -100px;
+    scale: 0.385; /* 20px */
     /* no backdrop blur: it would re-render on every mouse move for an invisible 2px effect */
-    will-change: transform;
+    will-change: translate, scale;
     transition:
-      width 0.3s var(--spring),
-      height 0.3s var(--spring),
-      margin 0.3s var(--spring),
+      scale 0.3s var(--spring),
       opacity 0.2s;
   }
 
   .pointer-follower--hover {
-    width: 52px;
-    height: 52px;
-    margin: -26px 0 0 -26px;
+    scale: 1;
     opacity: 0.5;
   }
 }

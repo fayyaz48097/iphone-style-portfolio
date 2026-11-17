@@ -21,6 +21,16 @@
     transition: transform 0.35s var(--spring);
   }
 
+  /* brand logo in place of the glyph */
+  .app-icon__image {
+    display: block;
+    width: 58%;
+    height: 58%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+  }
+
   /* glossy top highlight */
   .app-icon::after {
     content: '';

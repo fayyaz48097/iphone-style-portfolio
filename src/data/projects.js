@@ -1,5 +1,5 @@
 import { linearGradient } from '@/lib/gradient'
-import { GRADIENTS } from './brand'
+import { BRAND_ICONS } from './brand'
 
 export const workSection = {
   title: 'Today',
@@ -20,7 +20,7 @@ export const featuredProject = {
   category: 'Utility billing',
   terminalNote: 'utility billing platform, multi-tenant, Laravel 12',
   status: 'In progress',
-  icon: { glyph: 'M', background: GRADIENTS.brand },
+  icon: BRAND_ICONS.moneta,
 }
 
 /**

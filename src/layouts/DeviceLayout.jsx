@@ -10,7 +10,7 @@ import { TabBar } from '@/components/system/TabBar/TabBar'
 import { Terminal } from '@/components/system/Terminal/Terminal'
 import { KONAMI_CODE } from '@/constants'
 import { useAppActions } from '@/hooks/useAppActions'
-import { usePauseWhenHidden, usePointerLightAngle } from '@/hooks/useDocumentEffects'
+import { usePauseWhenHidden, usePauseWhenIdle, usePointerLightAngle } from '@/hooks/useDocumentEffects'
 import { useKeySequence } from '@/hooks/useKeySequence'
 
 /**
@@ -24,6 +24,7 @@ export function DeviceLayout({ hero, children }) {
 
   usePointerLightAngle()
   usePauseWhenHidden()
+  usePauseWhenIdle()
   useKeySequence(KONAMI_CODE, () => {
     fireConfetti(220)
     notify({ icon: '🕹️', title: 'Cheat code unlocked', subtitle: 'You have great taste in developers', duration: 3000 })

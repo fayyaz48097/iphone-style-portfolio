@@ -73,7 +73,12 @@
    * Every glass surface re-blurs whatever moves behind it. While an overlay is open
    * the wallpaper is mostly covered, so its drift pauses and the overlay stays smooth.
    */
-  .has-overlay .wallpaper__blob {
+  .has-overlay .wallpaper__blob,
+  /*
+   * Nobody is interacting (see usePauseWhenIdle): the tab bar's backdrop blur would
+   * otherwise be re-rendered every frame just for the slow drift. Resumes in place.
+   */
+  .is-idle .wallpaper__blob {
     animation-play-state: paused;
   }
 }

@@ -39,6 +39,47 @@ export function usePointerLightAngle() {
   )
 }
 
+const ACTIVITY_EVENTS = ['pointermove', 'pointerdown', 'keydown', 'wheel', 'scroll', 'touchstart']
+
+/**
+ * Adds `is-idle` to <html> after `delay` ms without any interaction, removing it on the
+ * next one. The wallpaper drift pauses while idle (see Wallpaper.css), so the GPU can rest.
+ * One timer at most: activity only records a timestamp, the timer re-checks it.
+ */
+export function usePauseWhenIdle(delay = 8000) {
+  useEffect(() => {
+    let lastActivity = performance.now()
+    let timer = 0
+
+    const check = () => {
+      const quietFor = performance.now() - lastActivity
+      if (quietFor >= delay) {
+        timer = 0
+        root().classList.add('is-idle')
+      } else {
+        timer = window.setTimeout(check, delay - quietFor)
+      }
+    }
+
+    const onActivity = () => {
+      lastActivity = performance.now()
+      if (!timer) {
+        root().classList.remove('is-idle')
+        timer = window.setTimeout(check, delay)
+      }
+    }
+
+    timer = window.setTimeout(check, delay)
+    for (const type of ACTIVITY_EVENTS) window.addEventListener(type, onActivity, { passive: true })
+
+    return () => {
+      window.clearTimeout(timer)
+      for (const type of ACTIVITY_EVENTS) window.removeEventListener(type, onActivity)
+      root().classList.remove('is-idle')
+    }
+  }, [delay])
+}
+
 /** Pauses every CSS animation while the tab is hidden, to save battery. */
 export function usePauseWhenHidden() {
   useEventListener(

@@ -1,4 +1,4 @@
-import { GRADIENTS } from './brand'
+import { BRAND_ICONS } from './brand'
 
 export const aboutSection = {
   title: "Hello, I'm Fayyaz",
@@ -28,7 +28,7 @@ export const aboutCards = [
     size: 'wide',
     title: 'Currently',
     live: true,
-    icon: { glyph: 'DD', background: GRADIENTS.brand },
+    icon: BRAND_ICONS.devDimensions,
     heading: 'Dev Dimensions',
     caption: 'Junior Laravel Developer since Dec 2025',
   },
@@ -46,7 +46,7 @@ export const aboutCards = [
     variant: 'nowPlaying',
     size: 'wide',
     title: 'Now playing',
-    icon: { glyph: 'M', background: GRADIENTS.brand },
+    icon: BRAND_ICONS.moneta,
     heading: 'Moneta billing engine',
     caption: 'Laravel 12 and MySQL',
   },

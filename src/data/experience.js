@@ -1,4 +1,4 @@
-import { GRADIENTS } from './brand'
+import { BRAND_ICONS, GRADIENTS } from './brand'
 
 export const journeySection = {
   title: 'Notifications',
@@ -16,7 +16,7 @@ export const experience = [
     current: true,
     summary:
       'Scalable Laravel apps on the Action-Repository-Service pattern, RESTful APIs with strict data contracts, and Eloquent query tuning across large modules.',
-    icon: { glyph: 'DD', background: GRADIENTS.brand },
+    icon: BRAND_ICONS.devDimensions,
   },
   {
     id: 'algo-soft-tech',

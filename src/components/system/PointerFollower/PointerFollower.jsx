@@ -28,7 +28,7 @@ function Follower() {
     const c = current.current
     c.x = lerp(c.x, t.x, EASING)
     c.y = lerp(c.y, t.y, EASING)
-    if (dotRef.current) dotRef.current.style.transform = `translate(${c.x}px, ${c.y}px)`
+    if (dotRef.current) dotRef.current.style.translate = `${c.x}px ${c.y}px`
 
     frame.current = Math.abs(t.x - c.x) + Math.abs(t.y - c.y) > REST_DISTANCE ? requestAnimationFrame(step) : 0
   }

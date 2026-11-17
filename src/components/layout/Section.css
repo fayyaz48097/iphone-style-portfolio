@@ -2,6 +2,13 @@
   .section {
     padding-block: clamp(3.5rem, 8vw, 6rem);
     scroll-margin-top: 60px;
+    /*
+     * Off-screen sections skip layout, paint and their looping animations entirely.
+     * `auto` remembers each section's real height once it has rendered; 800px is the
+     * typical section height, used until then so the scrollbar and tab jumps stay close.
+     */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 800px;
   }
 
   .section--flush-top {
